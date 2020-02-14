@@ -1,4 +1,9 @@
 exports.signup=(req,res)=>{
-    console.log("hi");
-    res.json({msg:"hello"})
+    const {username,email,password}=req.body;
+  res.json({
+      username:username,
+      email:email,
+      password:password
+  })
+// res.json({msg:"hello"})
     }
