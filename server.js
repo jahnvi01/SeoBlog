@@ -7,15 +7,16 @@ const mongoose=require('mongoose')
 require('dotenv').config()
 
 const app=express()
+const blogroutes=require('./routes/index')
+const authroutes=require('./routes/auth')
 app.use(morgan('dev'))
 app.use(bodyParser())
 app.use(cookieParser())
+app.use('/api',blogroutes)
 if(process.env.NODE_ENV=='development'){
     app.use(cors({origin:`${process.env.CLIENT_URL}`}))
 }
 
-mongoose.createConnection('mongodb+srv://jahnvi:jahnvi001@cluster0-0uzok.mongodb.net/test?retryWrites=true&w=majority',{useNewUrlParser:true,useCreateIndex:true,useFindAndModify:false})
-.then(()=>console.log("db connected"))
 const port=process.env.PORT||5000
 app.listen(port,()=>{
     console.log(`listening to port ${port}`)
