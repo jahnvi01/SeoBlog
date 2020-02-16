@@ -3,8 +3,8 @@ const crypto=require('crypto')
 mongoose.set('debug',true);
 mongoose.Promise=global.Promise;
 
-
-mongoose.createConnection('mongodb+srv://jahnvi:jahnvi001@cluster0-0uzok.mongodb.net/test?retryWrites=true&w=majority',{useNewUrlParser:true,useCreateIndex:true,useFindAndModify:false})
+//'mongodb+srv://jahnvi:jahnvi001@cluster0-0uzok.mongodb.net/test?retryWrites=true&w=majority'
+mongoose.connect(process.env.DATABASE,{useUnifiedTopology: true,useNewUrlParser:true,useCreateIndex:true,useFindAndModify:false})
 .then(()=>console.log("db connected"))
 
  const Schema=mongoose.Schema;
@@ -15,6 +15,10 @@ mongoose.createConnection('mongodb+srv://jahnvi:jahnvi001@cluster0-0uzok.mongodb
         unique:true,
         trim:true,
         index:true
+    },
+    name:{
+        type:String,
+        required:true,
     },
     email:{
         type:String,
@@ -27,32 +31,58 @@ mongoose.createConnection('mongodb+srv://jahnvi:jahnvi001@cluster0-0uzok.mongodb
         required:true  
 
     },
-    password:{
+  hashed_password:{
         type:String,
         required:true
     },
-salt:Number,
+salt:String,
 about:{
     type:String,
-    required:true,
     trim:true
 },
 role:{
     type:String,
-    required:true,
     trim:true
 },
 photo:{
-    data:buffer,
+    data:Buffer,
     contentType:String
 },
 resetPasswordLink:{
     data:String,
     default:''
 }
-});
+},{timestamp:true});
+userschema.virtual('password')
+.set(function(password){
+    this._password=password
+    this.salt=this.makeSalt()
+    this.hashed_password=this.encryptPassword(password)
+})
+.get(function(){
+    return this._password
+})                                                                                                                                                                                                                                                                                                                                                                            
+userschema.methods={
+    authenticate:function(){
+return this.encryptPassword(plainText)==this.hashed_password;
+    },
+    encryptPassword:function(password){
+if(!password) return ''
+try{
+return crypto 
+.createHmac('sha1',this.salt)
+.update(password)
+.digest('hex');
+}
+catch(err){
+return err;
+}
+    },
 
-
+    makeSalt:function(){
+return Math.round(new Date().valueOf()*Math.random())+'';
+    }
+}
 // const scoreschema=new Schema({
 //     email:{
 //         type:String,
@@ -139,8 +169,8 @@ resetPasswordLink:{
 
 
 
- const userchar=mongoose.model('userchar',userschema);
+ const users=mongoose.model('users',userschema);
 //  const scorechar=mongoose.model('scorechar',scoreschema);
 //  const pollchar=mongoose.model('pollchar',pollschema);
 //  const subjectchar=mongoose.model('subjectchar',subjectschema);
-  module.exports={userchar};
+  module.exports={users};
