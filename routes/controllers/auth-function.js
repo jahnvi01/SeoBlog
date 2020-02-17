@@ -57,4 +57,10 @@ const token=jwt.sign({_id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'})
     })
   // res.json({msg:"hi"}) 
         }
-   
+   exports.signout=(req,res)=>{
+       res.clearCookie('token');
+       res.json({message:"Signout success"})
+   }
+   exports.requireSignin= expressJwt({
+    secret: process.env.JWT_SECRET
+});
