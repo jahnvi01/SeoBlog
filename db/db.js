@@ -63,7 +63,7 @@ userschema.virtual('password')
     return this._password
 })                                                                                                                                                                                                                                                                                                                                                                            
 userschema.methods={
-    authenticate:function(){
+    authenticate:function(plainText){
 return this.encryptPassword(plainText)==this.hashed_password;
     },
     encryptPassword:function(password){
