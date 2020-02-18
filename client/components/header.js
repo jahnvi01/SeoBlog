@@ -1,4 +1,5 @@
-import {useState} from 'react'
+import {useState} from 'react';
+import {APP_NAME} from '../config';
 import {
   Collapse,
   Navbar,
@@ -13,7 +14,7 @@ import {
   DropdownItem,
   NavbarText
 } from 'reactstrap';
-
+import Link from 'next/link';
 const Header = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -22,35 +23,24 @@ const Header = (props) => {
   return (
     <div>
       <Navbar color="light" light expand="md">
-        <NavbarBrand href="/">reactstrap</NavbarBrand>
+        <Link href="/">
+        <NavbarBrand className='font-weight-bold'>SeoBlog</NavbarBrand>
+        </Link>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
-          <Nav className="mr-auto" navbar>
+          <Nav className="ml-auto" navbar>
             <NavItem>
-              <NavLink href="/components/">Components</NavLink>
+              <Link href='/signup'>
+              <NavLink >Signup</NavLink>
+              </Link> 
             </NavItem>
             <NavItem>
-              <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
+              <Link href='/signin'>
+              <NavLink >Signin</NavLink>
+              </Link> 
             </NavItem>
-            <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret>
-                Options
-              </DropdownToggle>
-              <DropdownMenu right>
-                <DropdownItem>
-                  Option 1
-                </DropdownItem>
-                <DropdownItem>
-                  Option 2
-                </DropdownItem>
-                <DropdownItem divider />
-                <DropdownItem>
-                  Reset
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
-          </Nav>
-          <NavbarText>Simple Text</NavbarText>
+                  </Nav>
+      
         </Collapse>
       </Navbar>
     </div>
