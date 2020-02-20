@@ -11,6 +11,7 @@ const blogroutes=require('./routes/index')
 const authroutes=require('./routes/auth')
 app.use(morgan('dev'))
 app.use(bodyParser())
+app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser())

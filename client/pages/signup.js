@@ -5,8 +5,12 @@ import SignupComponent from '../components/auth/signupcomponent'
 const Signup = () => {
     return (
         <Layout>
-            <h2>Signup page</h2>
+            <div className="row">
+                <div className="col-md-8 offset-md-2">
+            <h2 style={{textAlign:"center",padding:"2%",fontWeight:"bold"}}>Signup page</h2>
           <SignupComponent />
+          </div>
+          </div>
         </Layout>
     );
 };

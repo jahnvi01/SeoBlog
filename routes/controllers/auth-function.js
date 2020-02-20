@@ -6,12 +6,13 @@ exports.signup=(req,res)=>{
     let username,profile
     
     const {name,email,password}=req.body;
-    users.findOne(email).exec((err,user)=>{
+    users.findOne({email}).exec((err,user)=>{
 if(user){
     return res.status(400).json({
         error:"user already exists"
     })
 }
+else{
 username=shortId.generate()
 profile=`${process.env.CLIENT_URL}/profile/${username}`
 let newuser=new users({name,email,password,username,profile})
@@ -26,10 +27,10 @@ newuser.save()
     });
 })
 
-
+}
 
 })
-
+    
     };
 
 

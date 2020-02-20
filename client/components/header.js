@@ -1,5 +1,7 @@
 import {useState} from 'react';
 import {APP_NAME} from '../config';
+import {signout,isAuth} from '../actions/auth'
+import Router from 'next/router'
 import {
   Collapse,
   Navbar,
@@ -15,6 +17,7 @@ import {
   NavbarText
 } from 'reactstrap';
 import Link from 'next/link';
+
 const Header = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -39,6 +42,13 @@ const Header = (props) => {
               <NavLink >Signin</NavLink>
               </Link> 
             </NavItem>
+{isAuth() &&
+            <NavItem>
+              <Link href='/signin'>
+              <NavLink onClick={()=>signout(()=>Router.push('/signin'))}>Signout</NavLink>
+              </Link> 
+            </NavItem>
+}
                   </Nav>
       
         </Collapse>
