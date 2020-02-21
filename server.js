@@ -9,6 +9,7 @@ require('dotenv').config()
 const app=express()
 const blogroutes=require('./routes/index')
 const authroutes=require('./routes/auth')
+const userroutes=require('./routes/user')
 app.use(morgan('dev'))
 app.use(bodyParser())
 app.use(cors())
@@ -17,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser())
 app.use('/api',blogroutes)
 app.use('/api/auth',authroutes)
+app.use('/api/user',userroutes)
 if(process.env.NODE_ENV=='development'){
     app.use(cors({origin:`${process.env.CLIENT_URL}`}))
 }

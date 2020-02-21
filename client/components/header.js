@@ -10,11 +10,7 @@ import {
   Nav,
   NavItem,
   NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  NavbarText
+
 } from 'reactstrap';
 import Link from 'next/link';
 
@@ -32,6 +28,7 @@ const Header = (props) => {
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
+           {!isAuth() && <React.Fragment>
             <NavItem>
               <Link href='/signup'>
               <NavLink >Signup</NavLink>
@@ -42,6 +39,8 @@ const Header = (props) => {
               <NavLink >Signin</NavLink>
               </Link> 
             </NavItem>
+            </React.Fragment>
+            }
 {isAuth() &&
             <NavItem>
               <Link href='/signin'>

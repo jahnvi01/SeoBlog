@@ -42,7 +42,7 @@ about:{
 },
 role:{
     type:String,
-    trim:true
+    default:0
 },
 photo:{
     data:Buffer,

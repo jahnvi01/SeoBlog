@@ -65,3 +65,39 @@ const token=jwt.sign({_id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'})
    exports.requireSignin= expressJwt({
     secret: process.env.JWT_SECRET
 });
+
+exports.authMiddleware=(req,res,next)=>{
+    const id=req.user._id
+    users.findById({_id:id}).exec((err,user)=>{
+        if(err||!user){
+            return res.status(400).json({
+                error:"user not found"
+            })
+        }
+        req.profile=user
+        next()
+    })
+}
+
+exports.adminMiddleware=(req,res,next)=>{
+    const id=req.user._id
+    users.findById({_id:id}).exec((err,user)=>{
+        if(err||!user){
+            return res.status(400).json({
+                error:"user not found"
+            })
+        }
+        if(user.role!==1){
+            return res.status(400).json({
+                error:"admin panel access denied"
+            })
+        }
+
+        req.profile=user
+        next()
+    })
+}
+exports.read=(req,res)=>{
+    req.profile.hashed_password=undefined;
+    return res.json(req.profile)
+}

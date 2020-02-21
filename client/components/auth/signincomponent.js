@@ -1,5 +1,5 @@
-import {useState} from 'react'
-import {signin,authentication} from '../../actions/auth'
+import {useState,useEffect} from 'react'
+import {signin,authentication,isAuth} from '../../actions/auth'
 import Router from 'next/router';
 const SigninComponent=()=>{
 const [values,setValues]=useState({
@@ -10,6 +10,9 @@ loading:false,
 message:'',
 error:'',
 showForm:true
+    })
+    useEffect(()=>{
+        isAuth() && Router.push('/'),[]
     })
     const {email,password,loading,message,error,showForm}=values;
 const handleSubmit=(e)=>{
