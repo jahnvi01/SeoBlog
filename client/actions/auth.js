@@ -28,6 +28,7 @@ export const signin=(user)=>{
         body:JSON.stringify(user)
 
     })
+ 
     .then(response=>response.json())
     .catch(err=>console.log(err))
 };
@@ -66,7 +67,7 @@ export const removeLocalStorage=(key)=>{
 };
 
 export const authentication=(data,next)=>{
-    
+   console.log(data.user) 
    setCookie('token',data.token);
    setLocalStorage('user',data.user);
    next();

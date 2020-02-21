@@ -18,7 +18,7 @@ const Header = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
-
+console.log(isAuth())
   return (
     <div>
       <Navbar color="light" light expand="md">
@@ -41,13 +41,48 @@ const Header = (props) => {
             </NavItem>
             </React.Fragment>
             }
-{isAuth() &&
+
+{isAuth() && isAuth().role === 0 && (
+  <NavItem>
+    <Link href="/user">
+      <NavLink>Dashboard</NavLink>
+    </Link>
+  </NavItem>
+)}
+
+{isAuth() && isAuth().role === 1 && (
+  <NavItem>
+    <Link href="/admin">
+      <NavLink>Admin-Dashboard</NavLink>
+    </Link>
+  </NavItem>
+)}
+
+{isAuth() &&(
             <NavItem>
               <Link href='/signin'>
               <NavLink onClick={()=>signout(()=>Router.push('/signin'))}>Signout</NavLink>
               </Link> 
-            </NavItem>
+            </NavItem>)
 }
+{/* 
+{isAuth() && isAuth().role!==1(
+  <NavItem>
+    <Link href='/user'>
+    <NavLink>{`${isAuth().name}`}</NavLink>
+    </Link> 
+  </NavItem>
+)
+}
+
+{isAuth() && isAuth().role===1(
+  <NavItem>
+    <Link href='/admin'>
+    <NavLink>{Admin `${isAuth().name}`}</NavLink>
+    </Link> 
+  </NavItem>
+)
+} */}
                   </Nav>
       
         </Collapse>

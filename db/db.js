@@ -40,9 +40,9 @@ about:{
     type:String,
     trim:true
 },
-role:{
-    type:String,
-    default:0
+role: {
+    type: Number,
+    default: 0
 },
 photo:{
     data:Buffer,

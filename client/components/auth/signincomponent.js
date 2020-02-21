@@ -25,8 +25,15 @@ signin(user)
         setValues({...values,error:data.error,loading:false})
     }      
     else{
+console.log(data)
         authentication(data,()=>{
-            Router.push('/');
+          if(isAuth() && isAuth.role===1){
+          
+          Router.push('/admin');
+}
+            else{
+Router.push('/user')
+            }
         })
   
     }

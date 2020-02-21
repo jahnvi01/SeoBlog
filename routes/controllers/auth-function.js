@@ -51,6 +51,7 @@ newuser.save()
     }
 const token=jwt.sign({_id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'})
     res.cookie('token',token,{expiresIn:'1d'})
+    console.log(user);
     return res.json({
         token,
         user
@@ -58,35 +59,46 @@ const token=jwt.sign({_id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'})
     })
   // res.json({msg:"hi"}) 
         }
+
    exports.signout=(req,res)=>{
        res.clearCookie('token');
        res.json({message:"Signout success"})
-   }
+   };
+
+
    exports.requireSignin= expressJwt({
     secret: process.env.JWT_SECRET
 });
 
 exports.authMiddleware=(req,res,next)=>{
-    const id=req.user._id
-    users.findById({_id:id}).exec((err,user)=>{
-        if(err||!user){
-            return res.status(400).json({
-                error:"user not found"
-            })
-        }
-        req.profile=user
-        next()
-    })
+    // console.log(req.user)
+    // const id=req.user._id
+    // console.log("id")
+    // users.findById({_id:id}).exec((err,user)=>{
+    //     if(err||!user){
+    //         return res.status(400).json({
+    //             error:"user not found"
+    //         })
+    //     }
+    //     console.log(user)
+    //      req.profile=user
+    //      console.log("read")
+    //      req.profile.hashed_password=undefined;
+    //      return res.json(req.profile)
+    //     //next()
+    // })
 }
 
 exports.adminMiddleware=(req,res,next)=>{
     const id=req.user._id
+    console.log(id)
     users.findById({_id:id}).exec((err,user)=>{
         if(err||!user){
             return res.status(400).json({
                 error:"user not found"
             })
         }
+       
         if(user.role!==1){
             return res.status(400).json({
                 error:"admin panel access denied"
@@ -96,8 +108,4 @@ exports.adminMiddleware=(req,res,next)=>{
         req.profile=user
         next()
     })
-}
-exports.read=(req,res)=>{
-    req.profile.hashed_password=undefined;
-    return res.json(req.profile)
 }
