@@ -1,18 +1,18 @@
-const {category}=require('../../db/category')
+const {tag}=require('../../db/tags')
 const slugify=require('slugify')
 exports.create=(req,res)=>{
       const {name}=req.body;
   let slug=slugify(name).toLowerCase(); 
-category.findOne({name}).exec((err,cat)=>{
+tag.findOne({name}).exec((err,cat)=>{
     if(cat){
         return res.status(400).json({
-            error:"category already exists"
+            error:"tag already exists"
         })
     }
     else{
     
-        let Newcategory=category({name,slug})
-        Newcategory.save((error,data)=>{
+        let Newtag=tag({name,slug})
+        Newtag.save((error,data)=>{
             if(error){
                 return res.status(400).json({error:error})
             }
@@ -28,7 +28,7 @@ category.findOne({name}).exec((err,cat)=>{
 
 
 exports.list=(req,res)=>{
-category.find({}).exec((err,data)=>{
+tag.find({}).exec((err,data)=>{
     if(err){
         return res.status(400).json({error:err})
     }
@@ -41,7 +41,7 @@ category.find({}).exec((err,data)=>{
 
 exports.read=(req,res)=>{
     const slug=req.params.slug.toLowerCase()
-    category.find({slug}).exec((err,data)=>{
+    tag.find({slug}).exec((err,data)=>{
         if(err){
             return res.status(400).json({error:err})
         }
@@ -54,11 +54,11 @@ exports.read=(req,res)=>{
 
 exports.remove=(req,res)=>{
     const slug=req.params.slug.toLowerCase()
-    category.findOneAndRemove({slug}).exec((err,data)=>{
+    tag.findOneAndRemove({slug}).exec((err,data)=>{
         if(err){
             return res.status(400).json({error:err})
         }
-        res.json({message:"category deleted"})
+        res.json({message:"tag deleted"})
     })
     
     };

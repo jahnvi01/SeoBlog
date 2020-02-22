@@ -91,8 +91,6 @@ exports.authMiddleware=(req,res,next)=>{
 
 exports.adminMiddleware=(req,res,next)=>{
     const id=req.user._id
-
-    console.log("ijd")
     users.findById({_id:id}).exec((err,user)=>{
         if(err||!user){
             return res.status(400).json({
