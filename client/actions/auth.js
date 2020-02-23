@@ -46,10 +46,10 @@ export const removeCookie=(key)=>{
         cookie.remove(key,{expires:1})
     }
 };
-export const getCookie=(key,value)=>{
+export const getCookie=(key)=>{
     if(process.browser){
 
-     return   cookie.set(key)
+     return   cookie.get(key)
     }
 };
 

@@ -1617,9 +1617,9 @@ var removeCookie = function removeCookie(key) {
     });
   }
 };
-var getCookie = function getCookie(key, value) {
+var getCookie = function getCookie(key) {
   if (true) {
-    return js_cookie__WEBPACK_IMPORTED_MODULE_3___default.a.set(key);
+    return js_cookie__WEBPACK_IMPORTED_MODULE_3___default.a.get(key);
   }
 };
 var setLocalStorage = function setLocalStorage(key, value) {
@@ -27501,7 +27501,7 @@ var userIndex = function userIndex() {
 
 /***/ }),
 
-/***/ 5:
+/***/ 4:
 /*!***********************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fuser&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fuser%2Findex.js ***!
   \***********************************************************************************************************************************************/
@@ -27524,5 +27524,5 @@ module.exports = dll_5f137288facb1107b491;
 
 /***/ })
 
-},[[5,"static/runtime/webpack.js"]]]);
+},[[4,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=user.js.map

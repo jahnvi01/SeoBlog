@@ -6,12 +6,21 @@ import {useEffect} from 'react';
 const adminIndex = () => {
     return (
         <Layout>
-            <Admin>            <h2>adminIndex page</h2>
-            <Link href="/signup">
-                <a>Signup</a>
-            </Link>
-            </Admin>
+          {/* <Admin>  */}
+                <div className="row">
+                    <div className="col-md-12 pt-5 pb-5"> <h2>adminIndex page</h2></div>
+                    <div className="col-md-4">
+                    <ul className="list-group">
+  <li className="list-group-item"><Link href='/admin/crud/category-tag'><a>Create category</a></Link></li>
 
+</ul>
+                    </div>
+                    <div className="col-md-8"></div>
+                </div>
+                          
+           
+          
+                {/* </Admin> */}
         </Layout>
     );
 };

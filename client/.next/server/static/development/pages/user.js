@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -149,7 +149,7 @@ const setCookie = (key, value) => {
 const removeCookie = key => {
   if (false) {}
 };
-const getCookie = (key, value) => {
+const getCookie = key => {
   if (false) {}
 };
 const setLocalStorage = (key, value) => {
@@ -2208,7 +2208,7 @@ const userIndex = () => {
 
 /***/ }),
 
-/***/ 7:
+/***/ 6:
 /*!***********************************!*\
   !*** multi ./pages/user/index.js ***!
   \***********************************/
