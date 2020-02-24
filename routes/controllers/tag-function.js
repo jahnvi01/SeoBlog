@@ -1,5 +1,6 @@
 const {tag}=require('../../db/tags')
 const slugify=require('slugify')
+
 exports.create=(req,res)=>{
       const {name}=req.body;
   let slug=slugify(name).toLowerCase(); 

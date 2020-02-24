@@ -28455,7 +28455,7 @@ var CategoryTag = function CategoryTag() {
 
 /***/ }),
 
-/***/ 3:
+/***/ 1:
 /*!*************************************************************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fadmin%2Fcrud%2Fcategory-tag&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fadmin%2Fcrud%2Fcategory-tag.js ***!
   \*************************************************************************************************************************************************************************************/
@@ -28478,5 +28478,5 @@ module.exports = dll_5f137288facb1107b491;
 
 /***/ })
 
-},[[3,"static/runtime/webpack.js"]]]);
+},[[1,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=category-tag.js.map
