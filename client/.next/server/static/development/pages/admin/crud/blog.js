@@ -3,6 +3,12 @@ module.exports =
 /******/ 	// The module cache
 /******/ 	var installedModules = require('../../../../../ssr-module-cache.js');
 /******/
+/******/ 	// object to store loaded chunks
+/******/ 	// "0" means "already loaded"
+/******/ 	var installedChunks = {
+/******/ 		"static/development/pages/admin/crud/blog.js": 0
+/******/ 	};
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/
@@ -86,9 +92,16 @@ module.exports =
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/ 	// uncaught error handler for webpack runtime
+/******/ 	__webpack_require__.oe = function(err) {
+/******/ 		process.nextTick(function() {
+/******/ 			throw err; // catch this error by using import().catch()
+/******/ 		});
+/******/ 	};
+/******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -180,6 +193,47 @@ const isAuth = key => {
 
 /***/ }),
 
+/***/ "./actions/blog.js":
+/*!*************************!*\
+  !*** ./actions/blog.js ***!
+  \*************************/
+/*! exports provided: createBlog, listBlogsWithCategoriesAndTags */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createBlog", function() { return createBlog; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "listBlogsWithCategoriesAndTags", function() { return listBlogsWithCategoriesAndTags; });
+/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! isomorphic-fetch */ "isomorphic-fetch");
+/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./config.js");
+
+
+const createBlog = (blog, token) => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: blog
+  }).then(response => {
+    return response.json();
+  }).catch(err => console.log(err));
+};
+const listBlogsWithCategoriesAndTags = () => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blogs-categories-tags`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json'
+    }
+  }).then(response => {
+    return response.json();
+  }).catch(err => console.log(err));
+};
+
+/***/ }),
+
 /***/ "./actions/category.js":
 /*!*****************************!*\
   !*** ./actions/category.js ***!
@@ -228,6 +282,67 @@ const singleCategory = slug => {
 };
 const removeCategory = (slug, token) => {
   return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/${slug}`, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  }).then(response => {
+    return response.json();
+  }).catch(err => console.log(err));
+};
+
+/***/ }),
+
+/***/ "./actions/tag.js":
+/*!************************!*\
+  !*** ./actions/tag.js ***!
+  \************************/
+/*! exports provided: create, getTags, singleTag, removeTag */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTags", function() { return getTags; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "singleTag", function() { return singleTag; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeTag", function() { return removeTag; });
+/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! isomorphic-fetch */ "isomorphic-fetch");
+/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./config.js");
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! js-cookie */ "js-cookie");
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(js_cookie__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+const create = (tag, token) => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/tag`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(tag)
+  }).then(response => response.json()).catch(err => console.log(err));
+};
+const getTags = () => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/tags`, {
+    method: 'GET'
+  }).then(response => {
+    return response.json();
+  }).catch(err => console.log(err));
+};
+const singleTag = slug => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/tag/${slug}`, {
+    method: 'GET'
+  }).then(response => {
+    return response.json();
+  }).catch(err => console.log(err));
+};
+const removeTag = (slug, token) => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/rm/${slug}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -301,27 +416,510 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/router */ "next/router");
 /* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _actions_auth__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/auth */ "./actions/auth.js");
-/* harmony import */ var _actions_category__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/category */ "./actions/category.js");
+/* harmony import */ var next_dynamic__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! next/dynamic */ "next/dynamic");
+/* harmony import */ var next_dynamic__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(next_dynamic__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _actions_category__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/category */ "./actions/category.js");
+/* harmony import */ var _actions_blog__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/blog */ "./actions/blog.js");
+/* harmony import */ var _actions_tag__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../actions/tag */ "./actions/tag.js");
+/* harmony import */ var _node_modules_react_quill_dist_quill_snow_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../node_modules/react-quill/dist/quill.snow.css */ "./node_modules/react-quill/dist/quill.snow.css");
+/* harmony import */ var _node_modules_react_quill_dist_quill_snow_css__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_node_modules_react_quill_dist_quill_snow_css__WEBPACK_IMPORTED_MODULE_8__);
 var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/components/crud/blogcreate.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
 
 
 
-const CreateBlog = () => {
-  return __jsx("div", {
+
+
+
+const ReactQuill = next_dynamic__WEBPACK_IMPORTED_MODULE_4___default()(() => Promise.resolve(/*! import() */).then(__webpack_require__.t.bind(null, /*! react-quill */ "react-quill", 7)), {
+  ssr: false,
+  loadableGenerated: {
+    webpack: () => [/*require.resolve*/(/*! react-quill */ "react-quill")],
+    modules: ['react-quill']
+  }
+});
+ // import ReactQuill from 'react-quill';
+//import 'react-quill/dist/quill.snow.css';
+
+const CreateBlog = ({
+  router
+}) => {
+  const blogFromLS = () => {
+    if (true) {
+      return false;
+    }
+
+    if (localStorage.getItem('blog')) {
+      return JSON.parse(localStorage.getItem('blog'));
+    } else {
+      return false;
+    }
+  };
+
+  const token = Object(_actions_auth__WEBPACK_IMPORTED_MODULE_3__["getCookie"])('token');
+  const {
+    0: categories,
+    1: setCategories
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]);
+  const {
+    0: tags,
+    1: setTags
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]);
+  const {
+    0: body,
+    1: setBody
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(blogFromLS());
+  const {
+    0: checked,
+    1: setChecked
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]); // categories
+
+  const {
+    0: checkedTag,
+    1: setCheckedTag
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]); // tags
+
+  const {
+    0: values,
+    1: setValues
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+    error: '',
+    sizeError: '',
+    success: '',
+    formData: '',
+    title: '',
+    hidePublishButton: false
+  });
+  const {
+    error,
+    sizeError,
+    success,
+    formData,
+    title,
+    hidePublishButton
+  } = values;
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    setValues(_objectSpread({}, values, {
+      formData: new FormData()
+    }));
+    initCategories();
+    initTags();
+  }, [router]);
+
+  const publishBlog = e => {
+    e.preventDefault();
+    console.log(formData.get('categories'));
+    Object(_actions_blog__WEBPACK_IMPORTED_MODULE_6__["createBlog"])(formData, token).then(data => {
+      if (data.error) {
+        console.log(data.error);
+        setValues(_objectSpread({}, values, {
+          error: data.error
+        }));
+      } else {
+        setValues(_objectSpread({}, values, {
+          title: '',
+          error: '',
+          success: `A new blog titled "${data.title}" is created`
+        }));
+        setBody('');
+        setCategories([]);
+        setTags([]);
+      }
+    });
+  };
+
+  const handleToggle = c => () => {
+    setValues(_objectSpread({}, values, {
+      error: ''
+    })); // return the first index or -1
+
+    const clickedCategory = checked.indexOf(c);
+    const all = [...checked];
+
+    if (clickedCategory === -1) {
+      all.push(c);
+    } else {
+      all.splice(clickedCategory, 1);
+    }
+
+    console.log(all);
+    setChecked(all);
+    formData.set('categories', all);
+    console.log(formData.get('categories'));
+  };
+
+  const handleTagsToggle = t => () => {
+    setValues(_objectSpread({}, values, {
+      error: ''
+    })); // return the first index or -1
+
+    const clickedTag = checked.indexOf(t);
+    const all = [...checkedTag];
+
+    if (clickedTag === -1) {
+      all.push(t);
+    } else {
+      all.splice(clickedTag, 1);
+    }
+
+    console.log(all);
+    setCheckedTag(all);
+    formData.set('tags', all);
+  };
+
+  const handleChange = name => e => {
+    console.log(e.target.value);
+    const value = name === "photo" ? e.target.files[0] : e.target.value;
+    formData.set(name, value);
+    setValues(_objectSpread({}, values, {
+      [name]: value,
+      formData,
+      error: ""
+    }));
+  };
+
+  const initCategories = () => {
+    Object(_actions_category__WEBPACK_IMPORTED_MODULE_5__["getCategories"])().then(data => {
+      if (data.error) {
+        setValues(_objectSpread({}, values, {
+          error: data.error
+        }));
+      } else {
+        setCategories(data);
+      }
+    });
+  };
+
+  const initTags = () => {
+    Object(_actions_tag__WEBPACK_IMPORTED_MODULE_7__["getTags"])().then(data => {
+      if (data.error) {
+        setValues(_objectSpread({}, values, {
+          error: data.error
+        }));
+      } else {
+        setTags(data);
+      }
+    });
+  };
+
+  const showCategories = () => {
+    return categories && categories.map((c, i) => __jsx("li", {
+      key: i,
+      className: "list-unstyled",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 121
+      },
+      __self: undefined
+    }, __jsx("input", {
+      type: "checkbox",
+      onChange: handleToggle(c._id),
+      className: "mr-2",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 122
+      },
+      __self: undefined
+    }), __jsx("label", {
+      className: "form-check-label",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 123
+      },
+      __self: undefined
+    }, c.name)));
+  };
+
+  const showTags = () => {
+    return tags && tags.map((t, i) => __jsx("li", {
+      key: i,
+      className: "list-unstyled",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 133
+      },
+      __self: undefined
+    }, __jsx("input", {
+      type: "checkbox",
+      onChange: handleTagsToggle(t._id),
+      className: "mr-2",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 134
+      },
+      __self: undefined
+    }), __jsx("label", {
+      className: "form-check-label",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 135
+      },
+      __self: undefined
+    }, t.name)));
+  };
+
+  const handleBody = e => {
+    setBody(e);
+    formData.set('body', e);
+
+    if (false) {}
+  };
+
+  const showError = () => __jsx("div", {
+    className: "alert-alert-danger",
+    style: {
+      display: error ? '' : 'none'
+    },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 12
+      lineNumber: 149
     },
     __self: undefined
-  }, JSON.stringify(router));
+  }, error);
+
+  const showSuccess = () => __jsx("div", {
+    className: "alert-alert-success",
+    style: {
+      display: success ? '' : 'none'
+    },
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 152
+    },
+    __self: undefined
+  }, success);
+
+  const CreateBlogForm = () => {
+    return __jsx("form", {
+      onSubmit: publishBlog,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 156
+      },
+      __self: undefined
+    }, __jsx("div", {
+      className: "form-group",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 157
+      },
+      __self: undefined
+    }, __jsx("label", {
+      className: "text-muted",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 158
+      },
+      __self: undefined
+    }, "Title"), __jsx("input", {
+      type: "text",
+      className: "form-control",
+      onChange: handleChange('title'),
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 159
+      },
+      __self: undefined
+    })), __jsx("div", {
+      className: "form-group",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 161
+      },
+      __self: undefined
+    }, __jsx(ReactQuill, {
+      modules: CreateBlog.modules,
+      formats: CreateBlog.formats,
+      value: body,
+      placeholder: "write something...",
+      onChange: handleBody,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 162
+      },
+      __self: undefined
+    })), __jsx("div", {
+      className: "form-group",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 165
+      },
+      __self: undefined
+    }, __jsx("button", {
+      type: "submit",
+      className: "btn-btn-primary",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 166
+      },
+      __self: undefined
+    }, "Publish")));
+  };
+
+  return __jsx("div", {
+    className: "container-fluid",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 173
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "row",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 174
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "col-md-8",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 175
+    },
+    __self: undefined
+  }, showError(), showSuccess(), CreateBlogForm()), __jsx("div", {
+    className: "col-md-4",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 182
+    },
+    __self: undefined
+  }, __jsx("div", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 183
+    },
+    __self: undefined
+  }, __jsx("div", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 185
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "form-group pb-2",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 186
+    },
+    __self: undefined
+  }, __jsx("h5", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 187
+    },
+    __self: undefined
+  }, "Featured image"), __jsx("hr", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 188
+    },
+    __self: undefined
+  }), __jsx("small", {
+    className: "text-muted",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 190
+    },
+    __self: undefined
+  }, "Max size: 1mb"), __jsx("label", {
+    className: "btn btn-outline-info",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 191
+    },
+    __self: undefined
+  }, "Upload featured image", __jsx("input", {
+    onChange: handleChange('photo'),
+    type: "file",
+    accept: "image/*",
+    hidden: true,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 193
+    },
+    __self: undefined
+  })))), __jsx("h5", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 198
+    },
+    __self: undefined
+  }, "Categories"), __jsx("hr", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 199
+    },
+    __self: undefined
+  }), __jsx("ul", {
+    style: {
+      maxHeight: '200px',
+      overflowY: 'scroll'
+    },
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 201
+    },
+    __self: undefined
+  }, showCategories())), __jsx("div", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 203
+    },
+    __self: undefined
+  }, __jsx("h5", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 204
+    },
+    __self: undefined
+  }, "Tags"), __jsx("hr", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 205
+    },
+    __self: undefined
+  }), __jsx("ul", {
+    style: {
+      maxHeight: '200px',
+      overflowY: 'scroll'
+    },
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 206
+    },
+    __self: undefined
+  }, showTags())))));
 };
 
+CreateBlog.modules = {
+  toolbar: [[{
+    header: '1'
+  }, {
+    header: '2'
+  }, {
+    header: [3, 4, 5, 6]
+  }, {
+    font: []
+  }], [{
+    size: []
+  }], ['bold', 'italic', 'underline', 'strike', 'blockquote'], [{
+    list: 'ordered'
+  }, {
+    list: 'bullet'
+  }], ['link', 'image', 'video'], ['clean'], ['code-block']]
+};
+CreateBlog.formats = ['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'link', 'image', 'video', 'code-block'];
 /* harmony default export */ __webpack_exports__["default"] = (CreateBlog);
 
 /***/ }),
@@ -498,24 +1096,43 @@ const Header = props => {
       lineNumber: 56
     },
     __self: undefined
-  }, "Admin-Dashboard"))), Object(_actions_auth__WEBPACK_IMPORTED_MODULE_2__["isAuth"])() && __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["NavItem"], {
+  }, "Admin-Dashboard"))), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["NavItem"], {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 60
+    },
+    __self: undefined
+  }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_5___default.a, {
+    href: "/blogs",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 61
+    },
+    __self: undefined
+  }, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["NavLink"], {
     __source: {
       fileName: _jsxFileName,
       lineNumber: 62
+    },
+    __self: undefined
+  }, "Blogs"))), Object(_actions_auth__WEBPACK_IMPORTED_MODULE_2__["isAuth"])() && __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["NavItem"], {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 66
     },
     __self: undefined
   }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_5___default.a, {
     href: "/signin",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 63
+      lineNumber: 67
     },
     __self: undefined
   }, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["NavLink"], {
     onClick: () => Object(_actions_auth__WEBPACK_IMPORTED_MODULE_2__["signout"])(() => next_router__WEBPACK_IMPORTED_MODULE_3___default.a.push('/signin')),
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 64
+      lineNumber: 68
     },
     __self: undefined
   }, "Signout")))))));
@@ -2257,6 +2874,17 @@ module.exports = __webpack_require__(/*! ./dist/client/link */ "./node_modules/n
 
 /***/ }),
 
+/***/ "./node_modules/react-quill/dist/quill.snow.css":
+/*!******************************************************!*\
+  !*** ./node_modules/react-quill/dist/quill.snow.css ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
 /***/ "./pages/admin/crud/blog.js":
 /*!**********************************!*\
   !*** ./pages/admin/crud/blog.js ***!
@@ -2319,7 +2947,7 @@ const Blog = () => {
     },
     __self: undefined
   }, "Manage Blogs")), __jsx("div", {
-    className: "col-md-6",
+    className: "col-md-12",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 15
@@ -2352,7 +2980,7 @@ const Blog = () => {
 
 /***/ }),
 
-/***/ 3:
+/***/ 7:
 /*!****************************************!*\
   !*** multi ./pages/admin/crud/blog.js ***!
   \****************************************/
@@ -2463,6 +3091,17 @@ module.exports = require("next/config");
 
 /***/ }),
 
+/***/ "next/dynamic":
+/*!*******************************!*\
+  !*** external "next/dynamic" ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("next/dynamic");
+
+/***/ }),
+
 /***/ "next/router":
 /*!******************************!*\
   !*** external "next/router" ***!
@@ -2515,6 +3154,17 @@ module.exports = require("react");
 /***/ (function(module, exports) {
 
 module.exports = require("react-is");
+
+/***/ }),
+
+/***/ "react-quill":
+/*!******************************!*\
+  !*** external "react-quill" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("react-quill");
 
 /***/ }),
 
