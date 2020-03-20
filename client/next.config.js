@@ -1,8 +1,11 @@
 const withCSS=require('@zeit/next-css')
 module.exports=withCSS({
-    publicRuntimeconfig:{
+    publicRuntimeConfig:{
         APP_NAME:'SeoBlog',
         API_DEVELOPMENT:'http://localhost:5000/api',
-        PRODUCTION:false
+        PRODUCTION:false,
+        DOMAIN_DEVELOPMENT:'http://localhost:3000',
+        DOMAIN_PRODUCTION:'https://seoblog.com',
+        FB_APP_ID:'3074888912563765'
     }
 })
