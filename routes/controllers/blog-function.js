@@ -90,9 +90,9 @@ const postedBy = req.user._id;
 
    exports.list=(req,res)=>{
 Blog.find({})
-.populate('category','_id name slug')
-.populate('tag','_id name slug')
-.populate('users','_id name username')
+.populate('categories', '_id name slug')
+.populate('tags', '_id name slug')
+.populate('postedBy', '_id name username profile')
 .select('_id title slug excerpt categories tags postedBy createdAt updatedAt')
 .exec((err, data) => {
     if (err) {
@@ -153,9 +153,9 @@ Blog.find({})
 exports.read = (req, res) => {
     const slug = req.params.slug.toLowerCase();
     Blog.findOne({ slug })
-        .populate('category', '_id name slug')
-        .populate('tag', '_id name slug')
-        .populate('users', '_id name username')
+    .populate('categories', '_id name slug')
+    .populate('tags', '_id name slug')
+    .populate('postedBy', '_id name username profile')
         .select('_id title body slug mtitle mdesc categories tags postedBy createdAt updatedAt')
         .exec((err, data) => {
             if (err) {

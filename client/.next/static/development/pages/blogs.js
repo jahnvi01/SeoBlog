@@ -19319,7 +19319,7 @@ var listBlogsWithCategoriesAndTags = function listBlogsWithCategoriesAndTags(ski
   });
 };
 var singleBlog = function singleBlog(slug) {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_1__["API"], "/blog/").concat(slug), {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_1__["API"], "/api/blog/").concat(slug), {
     method: 'GET'
   }).then(function (response) {
     return response.json();
@@ -46486,7 +46486,7 @@ Blogs.getInitialProps = function () {
 
 /***/ }),
 
-/***/ 2:
+/***/ 4:
 /*!*************************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fblogs&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fblogs%2Findex.js ***!
   \*************************************************************************************************************************************************/
@@ -46509,5 +46509,5 @@ module.exports = dll_5f137288facb1107b491;
 
 /***/ })
 
-},[[2,"static/runtime/webpack.js"]]]);
+},[[4,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=blogs.js.map

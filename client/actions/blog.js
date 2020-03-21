@@ -1,6 +1,5 @@
 import fetch from 'isomorphic-fetch';
 import { API } from '../config';
-
 export const createBlog = (blog, token) => {
     return fetch(`${API}/api/blog`, {
         method: 'POST',
@@ -33,7 +32,7 @@ var data={skip,limit}
         .catch(err => console.log(err));
 };
 export const singleBlog = slug => {
-    return fetch(`${API}/blog/${slug}`, {
+    return fetch(`${API}/api/blog/${slug}`, {
         method: 'GET'
     })
         .then(response => {
