@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["static/development/pages/categories/[slug].js"],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["static/development/pages/tags/[slug].js"],{
 
 /***/ "../node_modules/moment/locale sync recursive ^\\.\\/.*$":
 /*!***************************************************!*\
@@ -19390,19 +19390,19 @@ var updateBlog = function updateBlog(blog, token, slug) {
 
 /***/ }),
 
-/***/ "./actions/category.js":
-/*!*****************************!*\
-  !*** ./actions/category.js ***!
-  \*****************************/
-/*! exports provided: create, getCategories, singleCategory, removeCategory */
+/***/ "./actions/tag.js":
+/*!************************!*\
+  !*** ./actions/tag.js ***!
+  \************************/
+/*! exports provided: create, getTags, singleTag, removeTag */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCategories", function() { return getCategories; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "singleCategory", function() { return singleCategory; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeCategory", function() { return removeCategory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTags", function() { return getTags; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "singleTag", function() { return singleTag; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeTag", function() { return removeTag; });
 /* harmony import */ var _babel_runtime_corejs2_core_js_json_stringify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/json/stringify */ "./node_modules/@babel/runtime-corejs2/core-js/json/stringify.js");
 /* harmony import */ var _babel_runtime_corejs2_core_js_json_stringify__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_json_stringify__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! isomorphic-fetch */ "./node_modules/isomorphic-fetch/fetch-npm-browserify.js");
@@ -19414,23 +19414,23 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var create = function create(category, token) {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/admin/category"), {
+var create = function create(tag, token) {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/admin/tag"), {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-type': 'application/json',
       Authorization: "Bearer ".concat(token)
     },
-    body: _babel_runtime_corejs2_core_js_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(category)
+    body: _babel_runtime_corejs2_core_js_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(tag)
   }).then(function (response) {
     return response.json();
   })["catch"](function (err) {
     return console.log(err);
   });
 };
-var getCategories = function getCategories() {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/admin/categories"), {
+var getTags = function getTags() {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/admin/tags"), {
     method: 'GET'
   }).then(function (response) {
     return response.json();
@@ -19438,18 +19438,17 @@ var getCategories = function getCategories() {
     return console.log(err);
   });
 };
-var singleCategory = function singleCategory(slug) {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/admin/category/").concat(slug), {
+var singleTag = function singleTag(slug) {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/admin/tag/").concat(slug), {
     method: 'GET'
   }).then(function (response) {
-    //      console.log(response.json())
     return response.json();
   })["catch"](function (err) {
     return console.log(err);
   });
 };
-var removeCategory = function removeCategory(slug, token) {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/admin/").concat(slug), {
+var removeTag = function removeTag(slug, token) {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/admin/rm/").concat(slug), {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -29013,21 +29012,21 @@ var assign=Object.assign.bind(Object);function g(){return assign;}Object.defineP
 
 /***/ }),
 
-/***/ "./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2Fcategories%2F%5Bslug%5D&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fcategories%2F%5Bslug%5D.js!./":
-/*!*************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2Fcategories%2F%5Bslug%5D&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fcategories%2F%5Bslug%5D.js ***!
-  \*************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2Ftags%2F%5Bslug%5D&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Ftags%2F%5Bslug%5D.js!./":
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2Ftags%2F%5Bslug%5D&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Ftags%2F%5Bslug%5D.js ***!
+  \*************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-    (window.__NEXT_P=window.__NEXT_P||[]).push(["/categories/[slug]", function() {
-      var mod = __webpack_require__(/*! ./pages/categories/[slug].js */ "./pages/categories/[slug].js")
+    (window.__NEXT_P=window.__NEXT_P||[]).push(["/tags/[slug]", function() {
+      var mod = __webpack_require__(/*! ./pages/tags/[slug].js */ "./pages/tags/[slug].js")
       if(true) {
-        module.hot.accept(/*! ./pages/categories/[slug].js */ "./pages/categories/[slug].js", function() {
-          if(!next.router.components["/categories/[slug]"]) return
-          var updatedPage = __webpack_require__(/*! ./pages/categories/[slug].js */ "./pages/categories/[slug].js")
-          next.router.update("/categories/[slug]", updatedPage)
+        module.hot.accept(/*! ./pages/tags/[slug].js */ "./pages/tags/[slug].js", function() {
+          if(!next.router.components["/tags/[slug]"]) return
+          var updatedPage = __webpack_require__(/*! ./pages/tags/[slug].js */ "./pages/tags/[slug].js")
+          next.router.update("/tags/[slug]", updatedPage)
         })
       }
       return mod
@@ -61776,10 +61775,10 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./pages/categories/[slug].js":
-/*!************************************!*\
-  !*** ./pages/categories/[slug].js ***!
-  \************************************/
+/***/ "./pages/tags/[slug].js":
+/*!******************************!*\
+  !*** ./pages/tags/[slug].js ***!
+  \******************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -61792,14 +61791,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _components_layout__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/layout */ "./components/layout.js");
-/* harmony import */ var _actions_category__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/category */ "./actions/category.js");
+/* harmony import */ var _actions_tag__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/tag */ "./actions/tag.js");
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../config */ "./config.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "../node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-render-html */ "./node_modules/react-render-html/index.js");
-/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_render_html__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-render-html */ "./node_modules/react-render-html/index.js");
+/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_render_html__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! moment */ "../node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _components_blog_card__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../components/blog/card */ "./components/blog/card.js");
-var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/pages/categories/[slug].js";
+var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/pages/tags/[slug].js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
@@ -61811,8 +61810,8 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
-var Category = function Category(_ref) {
-  var category = _ref.category,
+var Tag = function Tag(_ref) {
+  var tag = _ref.tag,
       blogs = _ref.blogs,
       query = _ref.query;
 
@@ -61829,9 +61828,9 @@ var Category = function Category(_ref) {
         lineNumber: 13
       },
       __self: this
-    }, category.name, " | ", _config__WEBPACK_IMPORTED_MODULE_5__["APP_NAME"]), __jsx("meta", {
+    }, tag.name, " | ", _config__WEBPACK_IMPORTED_MODULE_5__["APP_NAME"]), __jsx("meta", {
       name: "description",
-      content: "Best programming tutorials on ".concat(category.name),
+      content: "Best programming tutorials on ".concat(tag.name),
       __source: {
         fileName: _jsxFileName,
         lineNumber: 16
@@ -61847,7 +61846,7 @@ var Category = function Category(_ref) {
       __self: this
     }), __jsx("meta", {
       property: "og:title",
-      content: "".concat(category.name, "| ").concat(_config__WEBPACK_IMPORTED_MODULE_5__["APP_NAME"]),
+      content: "".concat(tag.name, "| ").concat(_config__WEBPACK_IMPORTED_MODULE_5__["APP_NAME"]),
       __source: {
         fileName: _jsxFileName,
         lineNumber: 18
@@ -61855,7 +61854,7 @@ var Category = function Category(_ref) {
       __self: this
     }), __jsx("meta", {
       property: "og:description",
-      content: "Best programming tutorials on ".concat(category.name),
+      content: "Best programming tutorials on ".concat(tag.name),
       __source: {
         fileName: _jsxFileName,
         lineNumber: 19
@@ -61965,7 +61964,7 @@ var Category = function Category(_ref) {
       lineNumber: 39
     },
     __self: this
-  }, category.name), blogs.map(function (b, i) {
+  }, tag.name), blogs.map(function (b, i) {
     return __jsx("div", {
       __source: {
         fileName: _jsxFileName,
@@ -61990,15 +61989,14 @@ var Category = function Category(_ref) {
   })))))));
 };
 
-Category.getInitialProps = function (_ref2) {
+Tag.getInitialProps = function (_ref2) {
   var query = _ref2.query;
-  return Object(_actions_category__WEBPACK_IMPORTED_MODULE_4__["singleCategory"])(query.slug).then(function (data) {
+  return Object(_actions_tag__WEBPACK_IMPORTED_MODULE_4__["singleTag"])(query.slug).then(function (data) {
     if (data.error) {
       console.log(data.error);
     } else {
-      console.log(data.category);
       return {
-        category: data.category,
+        tag: data.tag,
         blogs: data.blogs,
         query: query
       };
@@ -62006,19 +62004,7 @@ Category.getInitialProps = function (_ref2) {
   });
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Category);
-
-/***/ }),
-
-/***/ 2:
-/*!*****************************************************************************************************************************************************************************!*\
-  !*** multi next-client-pages-loader?page=%2Fcategories%2F%5Bslug%5D&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fcategories%2F%5Bslug%5D.js ***!
-  \*****************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(/*! next-client-pages-loader?page=%2Fcategories%2F%5Bslug%5D&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fcategories%2F%5Bslug%5D.js! */"./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2Fcategories%2F%5Bslug%5D&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fcategories%2F%5Bslug%5D.js!./");
-
+/* harmony default export */ __webpack_exports__["default"] = (Tag);
 
 /***/ }),
 
@@ -62030,6 +62016,18 @@ module.exports = __webpack_require__(/*! next-client-pages-loader?page=%2Fcatego
 /***/ (function(module, exports) {
 
 /* (ignored) */
+
+/***/ }),
+
+/***/ 4:
+/*!*****************************************************************************************************************************************************************!*\
+  !*** multi next-client-pages-loader?page=%2Ftags%2F%5Bslug%5D&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Ftags%2F%5Bslug%5D.js ***!
+  \*****************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! next-client-pages-loader?page=%2Ftags%2F%5Bslug%5D&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Ftags%2F%5Bslug%5D.js! */"./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2Ftags%2F%5Bslug%5D&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Ftags%2F%5Bslug%5D.js!./");
+
 
 /***/ }),
 
@@ -62055,5 +62053,5 @@ module.exports = dll_5f137288facb1107b491;
 
 /***/ })
 
-},[[2,"static/runtime/webpack.js"]]]);
+},[[4,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=[slug].js.map

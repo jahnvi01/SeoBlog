@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -282,19 +282,19 @@ const updateBlog = (blog, token, slug) => {
 
 /***/ }),
 
-/***/ "./actions/category.js":
-/*!*****************************!*\
-  !*** ./actions/category.js ***!
-  \*****************************/
-/*! exports provided: create, getCategories, singleCategory, removeCategory */
+/***/ "./actions/tag.js":
+/*!************************!*\
+  !*** ./actions/tag.js ***!
+  \************************/
+/*! exports provided: create, getTags, singleTag, removeTag */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCategories", function() { return getCategories; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "singleCategory", function() { return singleCategory; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeCategory", function() { return removeCategory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTags", function() { return getTags; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "singleTag", function() { return singleTag; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeTag", function() { return removeTag; });
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! isomorphic-fetch */ "isomorphic-fetch");
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./config.js");
@@ -303,34 +303,33 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const create = (category, token) => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/category`, {
+const create = (tag, token) => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/tag`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-type': 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify(category)
+    body: JSON.stringify(tag)
   }).then(response => response.json()).catch(err => console.log(err));
 };
-const getCategories = () => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/categories`, {
+const getTags = () => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/tags`, {
     method: 'GET'
   }).then(response => {
     return response.json();
   }).catch(err => console.log(err));
 };
-const singleCategory = slug => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/category/${slug}`, {
+const singleTag = slug => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/tag/${slug}`, {
     method: 'GET'
   }).then(response => {
-    //      console.log(response.json())
     return response.json();
   }).catch(err => console.log(err));
 };
-const removeCategory = (slug, token) => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/${slug}`, {
+const removeTag = (slug, token) => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/admin/rm/${slug}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -2506,10 +2505,10 @@ module.exports = __webpack_require__(/*! ./dist/client/link */ "./node_modules/n
 
 /***/ }),
 
-/***/ "./pages/categories/[slug].js":
-/*!************************************!*\
-  !*** ./pages/categories/[slug].js ***!
-  \************************************/
+/***/ "./pages/tags/[slug].js":
+/*!******************************!*\
+  !*** ./pages/tags/[slug].js ***!
+  \******************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2522,14 +2521,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _components_layout__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/layout */ "./components/layout.js");
-/* harmony import */ var _actions_category__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/category */ "./actions/category.js");
+/* harmony import */ var _actions_tag__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/tag */ "./actions/tag.js");
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../config */ "./config.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "moment");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-render-html */ "react-render-html");
-/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_render_html__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-render-html */ "react-render-html");
+/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_render_html__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! moment */ "moment");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _components_blog_card__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../components/blog/card */ "./components/blog/card.js");
-var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/pages/categories/[slug].js";
+var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/pages/tags/[slug].js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
@@ -2541,8 +2540,8 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
-const Category = ({
-  category,
+const Tag = ({
+  tag,
   blogs,
   query
 }) => {
@@ -2558,9 +2557,9 @@ const Category = ({
       lineNumber: 13
     },
     __self: undefined
-  }, category.name, " | ", _config__WEBPACK_IMPORTED_MODULE_5__["APP_NAME"]), __jsx("meta", {
+  }, tag.name, " | ", _config__WEBPACK_IMPORTED_MODULE_5__["APP_NAME"]), __jsx("meta", {
     name: "description",
-    content: `Best programming tutorials on ${category.name}`,
+    content: `Best programming tutorials on ${tag.name}`,
     __source: {
       fileName: _jsxFileName,
       lineNumber: 16
@@ -2576,7 +2575,7 @@ const Category = ({
     __self: undefined
   }), __jsx("meta", {
     property: "og:title",
-    content: `${category.name}| ${_config__WEBPACK_IMPORTED_MODULE_5__["APP_NAME"]}`,
+    content: `${tag.name}| ${_config__WEBPACK_IMPORTED_MODULE_5__["APP_NAME"]}`,
     __source: {
       fileName: _jsxFileName,
       lineNumber: 18
@@ -2584,7 +2583,7 @@ const Category = ({
     __self: undefined
   }), __jsx("meta", {
     property: "og:description",
-    content: `Best programming tutorials on ${category.name}`,
+    content: `Best programming tutorials on ${tag.name}`,
     __source: {
       fileName: _jsxFileName,
       lineNumber: 19
@@ -2693,7 +2692,7 @@ const Category = ({
       lineNumber: 39
     },
     __self: undefined
-  }, category.name), blogs.map((b, i) => __jsx("div", {
+  }, tag.name), blogs.map((b, i) => __jsx("div", {
     __source: {
       fileName: _jsxFileName,
       lineNumber: 41
@@ -2716,16 +2715,15 @@ const Category = ({
   })))))))));
 };
 
-Category.getInitialProps = ({
+Tag.getInitialProps = ({
   query
 }) => {
-  return Object(_actions_category__WEBPACK_IMPORTED_MODULE_4__["singleCategory"])(query.slug).then(data => {
+  return Object(_actions_tag__WEBPACK_IMPORTED_MODULE_4__["singleTag"])(query.slug).then(data => {
     if (data.error) {
       console.log(data.error);
     } else {
-      console.log(data.category);
       return {
-        category: data.category,
+        tag: data.tag,
         blogs: data.blogs,
         query
       };
@@ -2733,18 +2731,18 @@ Category.getInitialProps = ({
   });
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Category);
+/* harmony default export */ __webpack_exports__["default"] = (Tag);
 
 /***/ }),
 
-/***/ 4:
-/*!******************************************!*\
-  !*** multi ./pages/categories/[slug].js ***!
-  \******************************************/
+/***/ 5:
+/*!************************************!*\
+  !*** multi ./pages/tags/[slug].js ***!
+  \************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/jahnvi/My stuff/SeoBlog/client/pages/categories/[slug].js */"./pages/categories/[slug].js");
+module.exports = __webpack_require__(/*! /home/jahnvi/My stuff/SeoBlog/client/pages/tags/[slug].js */"./pages/tags/[slug].js");
 
 
 /***/ }),
