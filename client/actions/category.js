@@ -33,8 +33,10 @@ export const singleCategory = slug => {
     return fetch(`${API}/api/admin/category/${slug}`, {
         method: 'GET'
     })
+
         .then(response => {
-            return response.json();
+      //      console.log(response.json())
+           return response.json();
         })
         .catch(err => console.log(err));
 };
