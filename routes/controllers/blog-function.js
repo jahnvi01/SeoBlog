@@ -276,6 +276,7 @@ exports.photo = (req, res) => {
                         error: 'Blogs not found'
                     });
                 }
-                res.json(blogs);
+                console.log(blogs)
+             return res.json(blogs);
             });
     };

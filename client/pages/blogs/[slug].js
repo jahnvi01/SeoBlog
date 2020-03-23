@@ -17,7 +17,7 @@ const SingleBlog = ({ blog ,query}) => {
                 console.log(data.error);
             } else {
                 setRelated(data);
-                console.log(data)
+              //  console.log(data)
             }
         });
     };
