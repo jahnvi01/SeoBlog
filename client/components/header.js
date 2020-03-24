@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {APP_NAME} from '../config';
 import {signout,isAuth} from '../actions/auth'
 import Router from 'next/router'
+import Search from './blog/search';
 import {
   Collapse,
   Navbar,
@@ -91,6 +92,7 @@ console.log(isAuth())
       
         </Collapse>
       </Navbar>
+      <Search />
     </div>
   );
 }
