@@ -17,8 +17,8 @@ exports.read=(req,res)=>{
          req.profile=user
        
          req.profile.hashed_password=undefined;
+         //next()
          return res.json(req.profile)
-        //next()
     })
 }
 
@@ -45,11 +45,12 @@ exports.publicProfile = (req, res) => {
             .exec((err, data) => {
                 if (err) {
                     return res.status(400).json({
-                        error: errorHandler(err)
+                        error: err
                     });
                 }
                 user.photo = undefined;
-                res.json({
+               
+             return  res.json({
                     user,
                     blogs: data
                 });
@@ -93,11 +94,10 @@ exports.update = (req, res) => {
                 });
             }
             user.hashed_password = undefined;
-            res.json(user);
+          return res.json(user);
         });
     });
-};
-exports.photo = (req, res) => {
+};exports.photo = (req, res) => {
     const username = req.params.username;
     users.findOne({ username }).exec((err, user) => {
         if (err || !user) {

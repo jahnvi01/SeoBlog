@@ -63,6 +63,11 @@ console.log(isAuth())
       <NavLink>Blogs</NavLink>
     </Link>
   </NavItem>
+  <NavItem>
+              <Link href='/contact'>
+              <NavLink>Contact</NavLink>
+              </Link> 
+            </NavItem>
 {isAuth() &&(
             <NavItem>
               <Link href='/signin'>

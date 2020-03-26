@@ -26,4 +26,4 @@ const Signin = ({ router }) => {
     );
 };
 
-export default Signin;
+export default withRouter(Signin);

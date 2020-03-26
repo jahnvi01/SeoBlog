@@ -1,4 +1,5 @@
 const {Blog}=require('../../db/blog')
+const {users}=require('../../db/db')
 const {category}=require('../../db/category')
 const {tag}=require('../../db/tags')
 const formidable=require('formidable')
@@ -47,6 +48,7 @@ form.parse(req,(err,fields,files)=>{
     let arrayOfCategories = categories && categories.split(',');
     let arrayOfTags = tags && tags.split(',');
     console.log("tc"+arrayOfCategories+arrayOfTags)
+    console.log(req.user)
     categories=arrayOfCategories
     tags=arrayOfTags
    const excerpt = smartTrim(body, 320, ' ', ' ...');
@@ -298,4 +300,27 @@ exports.photo = (req, res) => {
                 }
             ).select('-photo -body');
         }
+    };
+    exports.listByUser = (req, res) => {
+        users.findOne({ username: req.params.username }).exec((err, user) => {
+            if (err) {
+                return res.status(400).json({
+                    error: errorHandler(err)
+                });
+            }
+            let userId = user._id;
+            Blog.find({ postedBy: userId })
+            .populate('categories', '_id name slug')
+            .populate('tags', '_id name slug')
+            .populate('postedBy', '_id name username profile')
+                .select('_id title slug postedBy createdAt updatedAt')
+                .exec((err, data) => {
+                    if (err) {
+                        return res.status(400).json({
+                            error: err
+                        });
+                    }
+                    res.json(data);
+                });
+        });
     };

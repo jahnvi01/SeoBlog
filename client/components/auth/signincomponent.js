@@ -1,5 +1,6 @@
 import {useState,useEffect} from 'react'
 import {signin,authentication,isAuth} from '../../actions/auth'
+import Link from 'next/link';
 import Router from 'next/router';
 const SigninComponent=()=>{
 const [values,setValues]=useState({
@@ -64,6 +65,9 @@ const showMessage=()=>(message?<div className="alert alert-info">{message}</div>
     <input  value={password} onChange={handleChange('password')} type="password" className="form-control" placeholder="type your password" />
 </div>
 <button className="btn-btn-primary">Signin</button>
+<Link href="/auth/password/forget">
+                <a className="btn btn-outline-danger btn-sm">Forgot password</a>
+            </Link>
   </form>
   </React.Fragment>
 )

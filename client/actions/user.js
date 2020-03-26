@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import { API } from '../config';
-
+import { isAuth,handleResponse } from './auth';
 export const userPublicProfile = username => {
     return fetch(`${API}/api/user/${username}`, {
         method: 'GET',
@@ -8,11 +8,9 @@ export const userPublicProfile = username => {
             Accept: 'application/json'
         }
     })
-        .then(response => {
-            return 
-            { handleResponse(response);
-                response.json();
-                }        })
+        .then(response => {return  response.json();         })
+          //  handleResponse(response);
+               
         .catch(err => console.log(err));
 };
 
