@@ -1,7 +1,7 @@
 module.exports =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
-/******/ 	var installedModules = require('../../../../ssr-module-cache.js');
+/******/ 	var installedModules = require('../../../ssr-module-cache.js');
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -97,12 +97,14 @@ module.exports =
 /*!*************************!*\
   !*** ./actions/auth.js ***!
   \*************************/
-/*! exports provided: signup, signin, setCookie, removeCookie, getCookie, setLocalStorage, removeLocalStorage, authentication, signout, isAuth */
+/*! exports provided: signup, updateUser, handleResponse, signin, setCookie, removeCookie, getCookie, setLocalStorage, removeLocalStorage, authentication, signout, isAuth */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signup", function() { return signup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateUser", function() { return updateUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleResponse", function() { return handleResponse; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signin", function() { return signin; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCookie", function() { return setCookie; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeCookie", function() { return removeCookie; });
@@ -132,6 +134,21 @@ const signup = user => {
     },
     body: JSON.stringify(user)
   }).then(response => response.json()).catch(err => console.log(err));
+};
+const updateUser = (user, next) => {
+  if (false) {}
+};
+const handleResponse = response => {
+  if (response.status === 401) {
+    signout(() => {
+      Router.push({
+        pathname: '/signin',
+        query: {
+          message: 'Your session is expired. Please signin'
+        }
+      });
+    });
+  }
 };
 const signin = user => {
   return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/auth/signin`, {
@@ -202,11 +219,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./config.js");
 /* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! query-string */ "query-string");
 /* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(query_string__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _auth__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./auth */ "./actions/auth.js");
+
 
 
 
 const createBlog = (blog, token) => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog`, {
+  let createBlogEndpoint;
+  console.log(Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role);
+
+  if (Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role === 1) {
+    createBlogEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog`;
+  } else if (Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role === 0) {
+    createBlogEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/authuser/blog`;
+  }
+
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${createBlogEndpoint}`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -214,6 +242,7 @@ const createBlog = (blog, token) => {
     },
     body: blog
   }).then(response => {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_3__["handleResponse"])(response);
     return response.json();
   }).catch(err => console.log(err));
 };
@@ -228,6 +257,7 @@ const listBlogsWithCategoriesAndTags = (skip, limit) => {
       Accept: 'application/json'
     }
   }).then(response => {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_3__["handleResponse"])(response);
     return response.json();
   }).catch(err => console.log(err));
 };
@@ -235,6 +265,7 @@ const singleBlog = slug => {
   return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog/${slug}`, {
     method: 'GET'
   }).then(response => {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_3__["handleResponse"])(response);
     return response.json();
   }).catch(err => console.log(err));
 };
@@ -252,15 +283,32 @@ const listRelated = blog => {
     return response.json();
   }).catch(err => console.log(err));
 };
-const list = () => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blogs`, {
+const list = username => {
+  let listBlogsEndpoint;
+
+  if (username) {
+    listBlogsEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/authuser/${username}/blogs`;
+  } else {
+    listBlogsEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blogs`;
+  }
+
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${listBlogsEndpoint}`, {
     method: 'GET'
   }).then(response => {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_3__["handleResponse"])(response);
     return response.json();
   }).catch(err => console.log(err));
 };
 const removeBlog = (slug, token) => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog/${slug}`, {
+  let deleteBlogEndpoint;
+
+  if (Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role === 1) {
+    deleteBlogEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog/${slug}`;
+  } else if (Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role === 0) {
+    deleteBlogEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/authuser/blog/${slug}`;
+  }
+
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${deleteBlogEndpoint}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -268,11 +316,20 @@ const removeBlog = (slug, token) => {
       Authorization: `Bearer ${token}`
     }
   }).then(response => {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_3__["handleResponse"])(response);
     return response.json();
   }).catch(err => console.log(err));
 };
 const updateBlog = (blog, token, slug) => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog/${slug}`, {
+  let updateBlogEndpoint;
+
+  if (Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role === 1) {
+    updateBlogEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog/${slug}`;
+  } else if (Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role === 0) {
+    updateBlogEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/authuser/blog/${slug}`;
+  }
+
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${updateBlogEndpoint}`, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
@@ -280,6 +337,7 @@ const updateBlog = (blog, token, slug) => {
     },
     body: blog
   }).then(response => {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_3__["handleResponse"])(response);
     return response.json();
   }).catch(err => console.log(err));
 };
@@ -296,63 +354,10 @@ const listSearch = params => {
 
 /***/ }),
 
-/***/ "./actions/user.js":
-/*!*************************!*\
-  !*** ./actions/user.js ***!
-  \*************************/
-/*! exports provided: userPublicProfile, getProfile, update */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userPublicProfile", function() { return userPublicProfile; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getProfile", function() { return getProfile; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
-/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! isomorphic-fetch */ "isomorphic-fetch");
-/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./config.js");
-
-
-const userPublicProfile = username => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/user/${username}`, {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json'
-    }
-  }).then(response => {
-    return response.json();
-  }).catch(err => console.log(err));
-};
-const getProfile = token => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/user/profile`, {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`
-    }
-  }).then(response => {
-    return response.json();
-  }).catch(err => console.log(err));
-};
-const update = (token, user) => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/user/update`, {
-    method: 'PUT',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`
-    },
-    body: user
-  }).then(response => {
-    return response.json();
-  }).catch(err => console.log(err));
-};
-
-/***/ }),
-
-/***/ "./components/auth/ProfileUpdate.js":
-/*!******************************************!*\
-  !*** ./components/auth/ProfileUpdate.js ***!
-  \******************************************/
+/***/ "./components/blog/card.js":
+/*!*********************************!*\
+  !*** ./components/blog/card.js ***!
+  \*********************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -360,21 +365,19 @@ const update = (token, user) => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
-/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/router */ "next/router");
-/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _actions_auth__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/auth */ "./actions/auth.js");
-/* harmony import */ var _actions_user__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/user */ "./actions/user.js");
-var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/components/auth/ProfileUpdate.js";
+/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next/head */ "next/head");
+/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_head__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_layout__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/layout */ "./components/layout.js");
+/* harmony import */ var _actions_blog__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/blog */ "./actions/blog.js");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../config */ "./config.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "moment");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
+var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/components/blog/card.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
@@ -382,343 +385,191 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-const ProfileUpdate = () => {
-  const {
-    0: values,
-    1: setValues
-  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
-    username: '',
-    name: '',
-    email: '',
-    about: '',
-    password: '',
-    error: false,
-    success: false,
-    loading: false,
-    photo: '',
-    userData: ''
-  });
-  const token = Object(_actions_auth__WEBPACK_IMPORTED_MODULE_3__["getCookie"])('token');
-  const {
-    username,
-    name,
-    email,
-    about,
-    password,
-    error,
-    success,
-    loading,
-    photo,
-    userData
-  } = values;
-
-  const init = () => {
-    Object(_actions_user__WEBPACK_IMPORTED_MODULE_4__["getProfile"])(token).then(data => {
-      if (data.error) {
-        setValues(_objectSpread({}, values, {
-          error: data.error
-        }));
-      } else {
-        setValues(_objectSpread({}, values, {
-          username: data.username,
-          name: data.name,
-          email: data.email,
-          about: data.about
-        }));
-      }
-    });
-  };
-
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
-    init();
-  }, []);
-
-  const handleChange = name => e => {
-    // console.log(e.target.value);
-    const value = name === 'photo' ? e.target.files[0] : e.target.value;
-    let userFormData = new FormData();
-    userFormData.set(name, value);
-    setValues(_objectSpread({}, values, {
-      [name]: value,
-      userData: userFormData,
-      error: false,
-      success: false
-    }));
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    setValues(_objectSpread({}, values, {
-      loading: true
-    }));
-    Object(_actions_user__WEBPACK_IMPORTED_MODULE_4__["update"])(token, userData).then(data => {
-      if (data.error) {
-        setValues(_objectSpread({}, value, {
-          error: data.error,
-          success: false,
-          loading: false
-        }));
-      } else {
-        setValues(_objectSpread({}, values, {
-          username: data.username,
-          name: data.name,
-          email: data.email,
-          about: data.about,
-          password: '',
-          success: true,
-          loading: false
-        }));
-      }
-    });
-  };
-
-  const profileUpdateForm = () => __jsx("form", {
-    onSubmit: handleSubmit,
+const Card = ({
+  blog
+}) => {
+  const showBlogCategories = blog => blog.categories.map((c, i) => __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    key: i,
+    href: `/categories/${c.slug}`,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 74
+      lineNumber: 13
     },
     __self: undefined
-  }, __jsx("div", {
-    className: "form-group",
+  }, __jsx("a", {
+    className: "btn btn-primary mr-1 ml-1 mt-3",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 75
+      lineNumber: 14
     },
     __self: undefined
-  }, __jsx("label", {
-    className: "btn btn-outline-info",
+  }, c.name)));
+
+  const showBlogTags = blog => blog.tags.map((t, i) => __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    key: i,
+    href: `/tags/${t.slug}`,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 76
+      lineNumber: 22
     },
     __self: undefined
-  }, "Profile photo", __jsx("input", {
-    onChange: handleChange('photo'),
-    type: "file",
-    accept: "image/*",
-    hidden: true,
+  }, __jsx("a", {
+    className: "btn btn-outline-primary mr-1 ml-1 mt-3",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 78
+      lineNumber: 23
     },
     __self: undefined
-  }))), __jsx("div", {
-    className: "form-group",
+  }, t.name)));
+
+  return __jsx("div", {
+    className: "lead pb-4",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 81
+      lineNumber: 28
     },
     __self: undefined
-  }, __jsx("label", {
-    className: "text-muted",
+  }, __jsx("header", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 82
+      lineNumber: 29
     },
     __self: undefined
-  }, "Username"), __jsx("input", {
-    onChange: handleChange('username'),
-    type: "text",
-    value: username,
-    className: "form-control",
+  }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    href: `/blogs/${blog.slug}`,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 83
+      lineNumber: 30
+    },
+    __self: undefined
+  }, __jsx("a", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 31
+    },
+    __self: undefined
+  }, __jsx("h2", {
+    className: "pt-3 pb-3 font-weight-bold",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 32
+    },
+    __self: undefined
+  }, blog.title)))), __jsx("section", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 36
+    },
+    __self: undefined
+  }, __jsx("p", {
+    className: "mark ml-1 pt-2 pb-2",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 37
+    },
+    __self: undefined
+  }, "Written by   ", __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    href: `/profile/${blog.postedBy.username}`,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 38
+    },
+    __self: undefined
+  }, __jsx("a", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 39
+    },
+    __self: undefined
+  }, blog.postedBy.username)), " | Published ", moment__WEBPACK_IMPORTED_MODULE_6___default()(blog.updatedAt).fromNow())), __jsx("section", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 43
+    },
+    __self: undefined
+  }, showBlogCategories(blog), showBlogTags(blog), __jsx("br", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 46
+    },
+    __self: undefined
+  }), __jsx("br", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 47
     },
     __self: undefined
   })), __jsx("div", {
-    className: "form-group",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 85
-    },
-    __self: undefined
-  }, __jsx("label", {
-    className: "text-muted",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 86
-    },
-    __self: undefined
-  }, "Name"), __jsx("input", {
-    onChange: handleChange('name'),
-    type: "text",
-    value: name,
-    className: "form-control",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 87
-    },
-    __self: undefined
-  })), __jsx("div", {
-    className: "form-group",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 89
-    },
-    __self: undefined
-  }, __jsx("label", {
-    className: "text-muted",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 90
-    },
-    __self: undefined
-  }, "Email"), __jsx("input", {
-    onChange: handleChange('email'),
-    type: "text",
-    value: email,
-    className: "form-control",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 91
-    },
-    __self: undefined
-  })), __jsx("div", {
-    className: "form-group",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 93
-    },
-    __self: undefined
-  }, __jsx("label", {
-    className: "text-muted",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 94
-    },
-    __self: undefined
-  }, "About"), __jsx("textarea", {
-    onChange: handleChange('about'),
-    type: "text",
-    value: about,
-    className: "form-control",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 95
-    },
-    __self: undefined
-  })), __jsx("div", {
-    className: "form-group",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 97
-    },
-    __self: undefined
-  }, __jsx("label", {
-    className: "text-muted",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 98
-    },
-    __self: undefined
-  }, "Password"), __jsx("input", {
-    onChange: handleChange('password'),
-    type: "text",
-    value: password,
-    className: "form-control",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 99
-    },
-    __self: undefined
-  })), __jsx("div", {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 101
-    },
-    __self: undefined
-  }, __jsx("button", {
-    type: "submit",
-    className: "btn btn-primary",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 102
-    },
-    __self: undefined
-  }, "Submit")));
-
-  return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 110
-    },
-    __self: undefined
-  }, __jsx("div", {
-    className: "container",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 111
-    },
-    __self: undefined
-  }, __jsx("div", {
     className: "row",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 112
+      lineNumber: 50
     },
     __self: undefined
   }, __jsx("div", {
     className: "col-md-4",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 113
+      lineNumber: 51
     },
     __self: undefined
-  }, "image"), __jsx("div", {
-    className: "col-md-8 mb-5",
+  }, "  ", __jsx("section", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 114
+      lineNumber: 51
     },
     __self: undefined
-  }, profileUpdateForm()))));
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (ProfileUpdate);
-
-/***/ }),
-
-/***/ "./components/auth/private.js":
-/*!************************************!*\
-  !*** ./components/auth/private.js ***!
-  \************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next/router */ "next/router");
-/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _actions_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/auth */ "./actions/auth.js");
-var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/components/auth/private.js";
-
-var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
-
-
-
-
-const Private = ({
-  children
-}) => {
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
-    if (!_actions_auth__WEBPACK_IMPORTED_MODULE_2__["isAuth"]) {
-      next_router__WEBPACK_IMPORTED_MODULE_1___default.a.push('/signin');
-    }
-  }, []);
-  return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.fragment, {
+  }, __jsx("img", {
+    className: "img img-fluid",
+    style: {
+      maxHeight: '150px',
+      width: 'auto'
+    },
+    src: `${_config__WEBPACK_IMPORTED_MODULE_5__["API"]}/api/blog/photo/${blog.slug}`,
+    alt: blog.title,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 11
+      lineNumber: 52
     },
     __self: undefined
-  }, children);
+  }))), __jsx("div", {
+    className: "col-md-8",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 59
+    },
+    __self: undefined
+  }, __jsx("section", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 60
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "pb-3",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 61
+    },
+    __self: undefined
+  }, blog.excerpt), __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    href: `/blogs/${blog.slug}`,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 62
+    },
+    __self: undefined
+  }, __jsx("a", {
+    className: "btn btn-primary pt-2",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 63
+    },
+    __self: undefined
+  }, "Read more"))))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Private);
+/* harmony default export */ __webpack_exports__["default"] = (Card);
 
 /***/ }),
 
@@ -1125,10 +976,30 @@ const Header = props => {
       lineNumber: 69
     },
     __self: undefined
-  }, "Signout")))))), __jsx(_blog_search__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, "Signout"))), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_5__["NavItem"], {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 95
+      lineNumber: 91
+    },
+    __self: undefined
+  }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_6___default.a, {
+    href: "/user/crud/blog",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 92
+    },
+    __self: undefined
+  }, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_5__["NavLink"], {
+    className: "btn btn-primary text-light",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 93
+    },
+    __self: undefined
+  }, "Write a blog")))))), __jsx(_blog_search__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 100
     },
     __self: undefined
   }));
@@ -2876,9 +2747,9 @@ module.exports = __webpack_require__(/*! ./dist/client/link */ "./node_modules/n
 
 /***/ }),
 
-/***/ "./pages/user/update.js":
+/***/ "./pages/blogs/index.js":
 /*!******************************!*\
-  !*** ./pages/user/update.js ***!
+  !*** ./pages/blogs/index.js ***!
   \******************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -2887,12 +2758,19 @@ module.exports = __webpack_require__(/*! ./dist/client/link */ "./node_modules/n
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/layout */ "./components/layout.js");
-/* harmony import */ var _components_auth_private__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/auth/private */ "./components/auth/private.js");
-/* harmony import */ var _components_auth_ProfileUpdate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/auth/ProfileUpdate */ "./components/auth/ProfileUpdate.js");
-/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
-/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_4__);
-var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/pages/user/update.js";
+/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next/head */ "next/head");
+/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_head__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_layout__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/layout */ "./components/layout.js");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! next/router */ "next/router");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _actions_blog__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/blog */ "./actions/blog.js");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../config */ "./config.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! moment */ "moment");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _components_blog_card__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../components/blog/card */ "./components/blog/card.js");
+var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/pages/blogs/index.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
@@ -2900,48 +2778,394 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
-const UserProfileUpdate = () => {
-  return __jsx(_components_layout__WEBPACK_IMPORTED_MODULE_1__["default"], {
+
+
+
+ //import renderHTML from 'react-render-html';
+
+
+
+const Blogs = ({
+  blogs,
+  categories,
+  tags,
+  totalBlogs,
+  blogsLimit,
+  blogSkip,
+  router
+}) => {
+  const head = () => __jsx(next_head__WEBPACK_IMPORTED_MODULE_1___default.a, {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 8
+      lineNumber: 16
+    },
+    __self: undefined
+  }, __jsx("title", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 17
+    },
+    __self: undefined
+  }, "Programming blogs | ", _config__WEBPACK_IMPORTED_MODULE_6__["APP_NAME"]), __jsx("meta", {
+    name: "description",
+    content: "Programming blogs and tutorials on react node next vue php laravel and web developoment",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 18
+    },
+    __self: undefined
+  }), __jsx("link", {
+    rel: "canonical",
+    href: `${_config__WEBPACK_IMPORTED_MODULE_6__["DOMAIN"]}${router.pathname}`,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 22
+    },
+    __self: undefined
+  }), __jsx("meta", {
+    property: "og:title",
+    content: `Latest web developoment tutorials | ${_config__WEBPACK_IMPORTED_MODULE_6__["APP_NAME"]}`,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 23
+    },
+    __self: undefined
+  }), __jsx("meta", {
+    property: "og:description",
+    content: "Programming blogs and tutorials on react node next vue php laravel and web developoment",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 24
+    },
+    __self: undefined
+  }), __jsx("meta", {
+    property: "og:type",
+    content: "webiste",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 28
+    },
+    __self: undefined
+  }), __jsx("meta", {
+    property: "og:url",
+    content: `${_config__WEBPACK_IMPORTED_MODULE_6__["DOMAIN"]}${router.pathname}`,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 29
+    },
+    __self: undefined
+  }), __jsx("meta", {
+    property: "og:site_name",
+    content: `${_config__WEBPACK_IMPORTED_MODULE_6__["APP_NAME"]}`,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 30
+    },
+    __self: undefined
+  }), __jsx("meta", {
+    property: "og:image",
+    content: `${_config__WEBPACK_IMPORTED_MODULE_6__["DOMAIN"]}/static/images/seo.png`,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 32
+    },
+    __self: undefined
+  }), __jsx("meta", {
+    property: "og:image:secure_url",
+    ccontent: `${_config__WEBPACK_IMPORTED_MODULE_6__["DOMAIN"]}/static/images/seo.png`,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 33
+    },
+    __self: undefined
+  }), __jsx("meta", {
+    property: "og:image:type",
+    content: "image/jpg",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 34
+    },
+    __self: undefined
+  }), __jsx("meta", {
+    property: "fb:app_id",
+    content: `${_config__WEBPACK_IMPORTED_MODULE_6__["FB_APP_ID"]}`,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 35
+    },
+    __self: undefined
+  }));
+
+  const {
+    0: limit,
+    1: setLimit
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(blogsLimit);
+  const {
+    0: skip,
+    1: setSkip
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0);
+  const {
+    0: size,
+    1: setSize
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(totalBlogs);
+  const {
+    0: loadedBlogs,
+    1: setLoadedBlogs
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]);
+
+  const loadMore = () => {
+    let toSkip = skip + limit;
+    Object(_actions_blog__WEBPACK_IMPORTED_MODULE_5__["listBlogsWithCategoriesAndTags"])(toSkip, limit).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setLoadedBlogs([...loadedBlogs, ...data.blogs]);
+        setSize(data.size);
+        setSkip(toSkip);
+      }
+    });
+  };
+
+  const loadMoreButton = () => {
+    return size > 0 && size >= limit && __jsx("button", {
+      onClick: loadMore,
+      className: "btn btn-outline-primary btn-lg",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 61
+      },
+      __self: undefined
+    }, "Load mmore");
+  };
+
+  const showLoadedBlogs = () => {
+    return loadedBlogs.map((blog, i) => __jsx("article", {
+      key: i,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 69
+      },
+      __self: undefined
+    }, __jsx(_components_blog_card__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      blog: blog,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 70
+      },
+      __self: undefined
+    })));
+  };
+
+  const showAllCategories = () => {
+    //  console.log(categories)
+    return categories.map((c, i) => __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+      href: `/categories/${c.slug}`,
+      key: i,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 78
+      },
+      __self: undefined
+    }, __jsx("a", {
+      className: "btn btn-primary mr-1 ml-1 mt-3",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 79
+      },
+      __self: undefined
+    }, c.name)));
+  };
+
+  const showAllTags = () => {
+    return tags.map((t, i) => __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+      href: `/tags/${t.slug}`,
+      key: i,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 86
+      },
+      __self: undefined
+    }, __jsx("a", {
+      className: "btn btn-outline-primary mr-1 ml-1 mt-3",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 87
+      },
+      __self: undefined
+    }, t.name)));
+  };
+
+  const showAllBlogs = () => {
+    console.log(blogs); //blogs=blogs.blogs
+
+    return blogs.map((blog, i) => {
+      // ()
+      return __jsx("article", {
+        key: i,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 100
+        },
+        __self: undefined
+      }, __jsx(_components_blog_card__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        blog: blog,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 101
+        },
+        __self: undefined
+      }), __jsx("hr", {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 102
+        },
+        __self: undefined
+      }));
+    });
+  }; // const showLoadedBlogs = () => {
+  //     return loadedBlogs.map((blog, i) => (
+  //         <article key={i}>
+  //             <Card blog={blog} />
+  //         </article>
+  //     ));
+  // };
+
+
+  return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 117
+    },
+    __self: undefined
+  }, head(), __jsx(_components_layout__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 119
+    },
+    __self: undefined
+  }, __jsx("main", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 120
     },
     __self: undefined
   }, __jsx("div", {
     className: "container-fluid",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 10
+      lineNumber: 121
+    },
+    __self: undefined
+  }, __jsx("header", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 122
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "col-md-12 pt-3",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 123
+    },
+    __self: undefined
+  }, __jsx("h1", {
+    className: "display-4 font-weight-bold text-center",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 124
+    },
+    __self: undefined
+  }, "Programming blogs and tutorials")), __jsx("section", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 126
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "pb-5 text-center",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 127
+    },
+    __self: undefined
+  }, showAllCategories(), __jsx("br", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 129
+    },
+    __self: undefined
+  }), showAllTags())))), __jsx("div", {
+    className: "container-fluid",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 135
     },
     __self: undefined
   }, __jsx("div", {
     className: "row",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 11
+      lineNumber: 136
     },
     __self: undefined
-  }, __jsx(_components_auth_ProfileUpdate__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, __jsx("div", {
+    className: "container-fluid",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 12
+      lineNumber: 137
     },
     __self: undefined
-  }))));
+  }, showAllBlogs()), __jsx("div", {
+    className: "container-fluid",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 138
+    },
+    __self: undefined
+  }, showLoadedBlogs()), __jsx("div", {
+    className: "text-center pt-5 pb-5",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 139
+    },
+    __self: undefined
+  }, loadMoreButton()))))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (UserProfileUpdate);
+Blogs.getInitialProps = () => {
+  let skip = 0;
+  let limit = 2;
+  return Object(_actions_blog__WEBPACK_IMPORTED_MODULE_5__["listBlogsWithCategoriesAndTags"])().then(data => {
+    if (data.error) {
+      console.log("data");
+    } else {
+      console.log(data);
+      return {
+        blogs: data.blogs,
+        categories: data.categories,
+        tags: data.tags,
+        size: data.size,
+        totalBlogs: data.size,
+        blogsLimit: limit,
+        blogSkip: skip
+      };
+    }
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(next_router__WEBPACK_IMPORTED_MODULE_4__["withRouter"])(Blogs));
 
 /***/ }),
 
-/***/ 6:
+/***/ 3:
 /*!************************************!*\
-  !*** multi ./pages/user/update.js ***!
+  !*** multi ./pages/blogs/index.js ***!
   \************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/jahnvi/My stuff/SeoBlog/client/pages/user/update.js */"./pages/user/update.js");
+module.exports = __webpack_require__(/*! /home/jahnvi/My stuff/SeoBlog/client/pages/blogs/index.js */"./pages/blogs/index.js");
 
 
 /***/ }),
@@ -3023,6 +3247,17 @@ module.exports = require("js-cookie");
 
 /***/ }),
 
+/***/ "moment":
+/*!*************************!*\
+  !*** external "moment" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("moment");
+
+/***/ }),
+
 /***/ "mongoose":
 /*!***************************!*\
   !*** external "mongoose" ***!
@@ -3042,6 +3277,17 @@ module.exports = require("mongoose");
 /***/ (function(module, exports) {
 
 module.exports = require("next/config");
+
+/***/ }),
+
+/***/ "next/head":
+/*!****************************!*\
+  !*** external "next/head" ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("next/head");
 
 /***/ }),
 
@@ -3145,4 +3391,4 @@ module.exports = require("url");
 /***/ })
 
 /******/ });
-//# sourceMappingURL=update.js.map
+//# sourceMappingURL=blogs.js.map

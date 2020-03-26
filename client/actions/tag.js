@@ -14,7 +14,12 @@ export const create=(tag,token)=>{
         body:JSON.stringify(tag)
 
     })
-    .then(response=>response.json())
+    .then(response=>{
+        
+        handleResponse(response);
+        response.json()}
+        )
+
     .catch(err=>console.log(err))
 };
 
@@ -49,7 +54,8 @@ export const removeTag = (slug, token) => {
         }
     })
         .then(response => {
-            return response.json();
+            return
+            { handleResponse(response); response.json();}
         })
         .catch(err => console.log(err));
 };

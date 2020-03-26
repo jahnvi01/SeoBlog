@@ -16,7 +16,28 @@ export const signup=(user)=>{
     .then(response=>response.json())
     .catch(err=>console.log(err))
 };
-
+export const updateUser = (user, next) => {
+    if (process.browser) {
+        if (localStorage.getItem('user')) {
+            let auth = JSON.parse(localStorage.getItem('user'));
+            auth = user;
+            localStorage.setItem('user', JSON.stringify(auth));
+            next();
+        }
+    }
+};
+export const handleResponse = response => {
+    if (response.status === 401) {
+        signout(() => {
+            Router.push({
+                pathname: '/signin',
+                query: {
+                    message: 'Your session is expired. Please signin'
+                }
+            });
+        });
+    }
+};
 export const signin=(user)=>{
    
     return fetch(`${API}/api/auth/signin`,{

@@ -1546,12 +1546,14 @@ f.ValidationError=u,t.exports=f}])});
 /*!*************************!*\
   !*** ./actions/auth.js ***!
   \*************************/
-/*! exports provided: signup, signin, setCookie, removeCookie, getCookie, setLocalStorage, removeLocalStorage, authentication, signout, isAuth */
+/*! exports provided: signup, updateUser, handleResponse, signin, setCookie, removeCookie, getCookie, setLocalStorage, removeLocalStorage, authentication, signout, isAuth */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signup", function() { return signup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateUser", function() { return updateUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleResponse", function() { return handleResponse; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signin", function() { return signin; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCookie", function() { return setCookie; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeCookie", function() { return removeCookie; });
@@ -1588,6 +1590,28 @@ var signup = function signup(user) {
   })["catch"](function (err) {
     return console.log(err);
   });
+};
+var updateUser = function updateUser(user, next) {
+  if (true) {
+    if (localStorage.getItem('user')) {
+      var auth = JSON.parse(localStorage.getItem('user'));
+      auth = user;
+      localStorage.setItem('user', _babel_runtime_corejs2_core_js_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(auth));
+      next();
+    }
+  }
+};
+var handleResponse = function handleResponse(response) {
+  if (response.status === 401) {
+    signout(function () {
+      Router.push({
+        pathname: '/signin',
+        query: {
+          message: 'Your session is expired. Please signin'
+        }
+      });
+    });
+  }
 };
 var signin = function signin(user) {
   return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/auth/signin"), {
@@ -1690,12 +1714,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config */ "./config.js");
 /* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! query-string */ "./node_modules/query-string/index.js");
 /* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(query_string__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _auth__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./auth */ "./actions/auth.js");
+
 
 
 
 
 var createBlog = function createBlog(blog, token) {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/blog"), {
+  var createBlogEndpoint;
+  console.log(Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])().role);
+
+  if (Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])().role === 1) {
+    createBlogEndpoint = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/blog");
+  } else if (Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])().role === 0) {
+    createBlogEndpoint = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/authuser/blog");
+  }
+
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(createBlogEndpoint), {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -1703,6 +1738,7 @@ var createBlog = function createBlog(blog, token) {
     },
     body: blog
   }).then(function (response) {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_4__["handleResponse"])(response);
     return response.json();
   })["catch"](function (err) {
     return console.log(err);
@@ -1719,6 +1755,7 @@ var listBlogsWithCategoriesAndTags = function listBlogsWithCategoriesAndTags(ski
       Accept: 'application/json'
     }
   }).then(function (response) {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_4__["handleResponse"])(response);
     return response.json();
   })["catch"](function (err) {
     return console.log(err);
@@ -1728,6 +1765,7 @@ var singleBlog = function singleBlog(slug) {
   return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/blog/").concat(slug), {
     method: 'GET'
   }).then(function (response) {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_4__["handleResponse"])(response);
     return response.json();
   })["catch"](function (err) {
     return console.log(err);
@@ -1749,17 +1787,34 @@ var listRelated = function listRelated(blog) {
     return console.log(err);
   });
 };
-var list = function list() {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/blogs"), {
+var list = function list(username) {
+  var listBlogsEndpoint;
+
+  if (username) {
+    listBlogsEndpoint = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/authuser/").concat(username, "/blogs");
+  } else {
+    listBlogsEndpoint = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/blogs");
+  }
+
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(listBlogsEndpoint), {
     method: 'GET'
   }).then(function (response) {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_4__["handleResponse"])(response);
     return response.json();
   })["catch"](function (err) {
     return console.log(err);
   });
 };
 var removeBlog = function removeBlog(slug, token) {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/blog/").concat(slug), {
+  var deleteBlogEndpoint;
+
+  if (Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])().role === 1) {
+    deleteBlogEndpoint = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/blog/").concat(slug);
+  } else if (Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])().role === 0) {
+    deleteBlogEndpoint = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/authuser/blog/").concat(slug);
+  }
+
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(deleteBlogEndpoint), {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -1767,13 +1822,22 @@ var removeBlog = function removeBlog(slug, token) {
       Authorization: "Bearer ".concat(token)
     }
   }).then(function (response) {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_4__["handleResponse"])(response);
     return response.json();
   })["catch"](function (err) {
     return console.log(err);
   });
 };
 var updateBlog = function updateBlog(blog, token, slug) {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/blog/").concat(slug), {
+  var updateBlogEndpoint;
+
+  if (Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])().role === 1) {
+    updateBlogEndpoint = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/blog/").concat(slug);
+  } else if (Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_4__["isAuth"])().role === 0) {
+    updateBlogEndpoint = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/authuser/blog/").concat(slug);
+  }
+
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(updateBlogEndpoint), {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
@@ -1781,6 +1845,7 @@ var updateBlog = function updateBlog(blog, token, slug) {
     },
     body: blog
   }).then(function (response) {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_4__["handleResponse"])(response);
     return response.json();
   })["catch"](function (err) {
     return console.log(err);
@@ -2268,10 +2333,30 @@ var Header = function Header(props) {
       lineNumber: 69
     },
     __self: this
-  }, "Signout")))))), __jsx(_blog_search__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, "Signout"))), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_5__["NavItem"], {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 95
+      lineNumber: 91
+    },
+    __self: this
+  }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_6___default.a, {
+    href: "/user/crud/blog",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 92
+    },
+    __self: this
+  }, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_5__["NavLink"], {
+    className: "btn btn-primary text-light",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 93
+    },
+    __self: this
+  }, "Write a blog")))))), __jsx(_blog_search__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 100
     },
     __self: this
   }));

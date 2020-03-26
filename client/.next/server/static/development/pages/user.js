@@ -97,12 +97,14 @@ module.exports =
 /*!*************************!*\
   !*** ./actions/auth.js ***!
   \*************************/
-/*! exports provided: signup, signin, setCookie, removeCookie, getCookie, setLocalStorage, removeLocalStorage, authentication, signout, isAuth */
+/*! exports provided: signup, updateUser, handleResponse, signin, setCookie, removeCookie, getCookie, setLocalStorage, removeLocalStorage, authentication, signout, isAuth */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signup", function() { return signup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateUser", function() { return updateUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleResponse", function() { return handleResponse; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signin", function() { return signin; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCookie", function() { return setCookie; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeCookie", function() { return removeCookie; });
@@ -132,6 +134,21 @@ const signup = user => {
     },
     body: JSON.stringify(user)
   }).then(response => response.json()).catch(err => console.log(err));
+};
+const updateUser = (user, next) => {
+  if (false) {}
+};
+const handleResponse = response => {
+  if (response.status === 401) {
+    signout(() => {
+      Router.push({
+        pathname: '/signin',
+        query: {
+          message: 'Your session is expired. Please signin'
+        }
+      });
+    });
+  }
 };
 const signin = user => {
   return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/auth/signin`, {
@@ -202,11 +219,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./config.js");
 /* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! query-string */ "query-string");
 /* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(query_string__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _auth__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./auth */ "./actions/auth.js");
+
 
 
 
 const createBlog = (blog, token) => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog`, {
+  let createBlogEndpoint;
+  console.log(Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role);
+
+  if (Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role === 1) {
+    createBlogEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog`;
+  } else if (Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role === 0) {
+    createBlogEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/authuser/blog`;
+  }
+
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${createBlogEndpoint}`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -214,6 +242,7 @@ const createBlog = (blog, token) => {
     },
     body: blog
   }).then(response => {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_3__["handleResponse"])(response);
     return response.json();
   }).catch(err => console.log(err));
 };
@@ -228,6 +257,7 @@ const listBlogsWithCategoriesAndTags = (skip, limit) => {
       Accept: 'application/json'
     }
   }).then(response => {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_3__["handleResponse"])(response);
     return response.json();
   }).catch(err => console.log(err));
 };
@@ -235,6 +265,7 @@ const singleBlog = slug => {
   return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog/${slug}`, {
     method: 'GET'
   }).then(response => {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_3__["handleResponse"])(response);
     return response.json();
   }).catch(err => console.log(err));
 };
@@ -252,15 +283,32 @@ const listRelated = blog => {
     return response.json();
   }).catch(err => console.log(err));
 };
-const list = () => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blogs`, {
+const list = username => {
+  let listBlogsEndpoint;
+
+  if (username) {
+    listBlogsEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/authuser/${username}/blogs`;
+  } else {
+    listBlogsEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blogs`;
+  }
+
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${listBlogsEndpoint}`, {
     method: 'GET'
   }).then(response => {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_3__["handleResponse"])(response);
     return response.json();
   }).catch(err => console.log(err));
 };
 const removeBlog = (slug, token) => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog/${slug}`, {
+  let deleteBlogEndpoint;
+
+  if (Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role === 1) {
+    deleteBlogEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog/${slug}`;
+  } else if (Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role === 0) {
+    deleteBlogEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/authuser/blog/${slug}`;
+  }
+
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${deleteBlogEndpoint}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -268,11 +316,20 @@ const removeBlog = (slug, token) => {
       Authorization: `Bearer ${token}`
     }
   }).then(response => {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_3__["handleResponse"])(response);
     return response.json();
   }).catch(err => console.log(err));
 };
 const updateBlog = (blog, token, slug) => {
-  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog/${slug}`, {
+  let updateBlogEndpoint;
+
+  if (Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role === 1) {
+    updateBlogEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/blog/${slug}`;
+  } else if (Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])() && Object(_auth__WEBPACK_IMPORTED_MODULE_3__["isAuth"])().role === 0) {
+    updateBlogEndpoint = `${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/authuser/blog/${slug}`;
+  }
+
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${updateBlogEndpoint}`, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
@@ -280,6 +337,7 @@ const updateBlog = (blog, token, slug) => {
     },
     body: blog
   }).then(response => {
+    Object(_auth__WEBPACK_IMPORTED_MODULE_3__["handleResponse"])(response);
     return response.json();
   }).catch(err => console.log(err));
 };
@@ -741,10 +799,30 @@ const Header = props => {
       lineNumber: 69
     },
     __self: undefined
-  }, "Signout")))))), __jsx(_blog_search__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, "Signout"))), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_5__["NavItem"], {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 95
+      lineNumber: 91
+    },
+    __self: undefined
+  }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_6___default.a, {
+    href: "/user/crud/blog",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 92
+    },
+    __self: undefined
+  }, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_5__["NavLink"], {
+    className: "btn btn-primary text-light",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 93
+    },
+    __self: undefined
+  }, "Write a blog")))))), __jsx(_blog_search__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 100
     },
     __self: undefined
   }));

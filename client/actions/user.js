@@ -9,12 +9,15 @@ export const userPublicProfile = username => {
         }
     })
         .then(response => {
-            return response.json();
-        })
+            return 
+            { handleResponse(response);
+                response.json();
+                }        })
         .catch(err => console.log(err));
 };
 
 export const getProfile = token => {
+    console.log("eee")
     return fetch(`${API}/api/user/profile`, {
         method: 'GET',
         headers: {
@@ -23,21 +26,24 @@ export const getProfile = token => {
         }
     })
         .then(response => {
+          //  console.log(response.json())
             return response.json();
         })
         .catch(err => console.log(err));
 };
 
 export const update = (token, user) => {
+    console.log(user.get("password"))
     return fetch(`${API}/api/user/update`, {
         method: 'PUT',
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`
         },
-        body: user
+        body:user
     })
         .then(response => {
+            handleResponse(response);
             return response.json();
         })
         .catch(err => console.log(err));
