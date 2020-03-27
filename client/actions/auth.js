@@ -2,6 +2,21 @@ import fetch from 'isomorphic-fetch';
 import {API} from '../config';
 import cookie from 'js-cookie';
 import { get } from 'mongoose';
+export const preSignup = user => {
+    return fetch(`${API}/api/auth/pre-signup`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
+
 export const signup=(user)=>{
    
     return fetch(`${API}/api/auth/signup`,{

@@ -6,38 +6,104 @@ const expressJwt=require('express-jwt')
 const _ = require('lodash');
 const sgMail = require('@sendgrid/mail'); // SENDGRID_API_KEY
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-exports.signup=(req,res)=>{
-    let username,profile
-    
-    const {name,email,password}=req.body;
-    users.findOne({email}).exec((err,user)=>{
-if(user){
-    return res.status(400).json({
-        error:"user already exists"
-    })
-}
-else{
-username=shortId.generate()
-profile=`${process.env.CLIENT_URL}/profile/${username}`
-let newuser=new users({name,email,password,username,profile})
-newuser.save()
-.then(user=>{
-    res.json({
-            email: user.email,
-            username: user.username,
-            password: user.password,
-            name:user.name, 
-            profile:user.profile
+
+
+exports.preSignup = (req, res) => {
+    const { name, email, password } = req.body;
+    users.findOne({ email: email.toLowerCase() }, (err, user) => {
+        if (user) {
+            return res.status(400).json({
+                error: 'Email is taken'
+            });
+        }
+        const token = jwt.sign({ name, email, password }, process.env.JWT_ACCOUNT_ACTIVATION, { expiresIn: '10m' });
+
+        const emailData = {
+            from: process.env.EMAIL_FROM,
+            to: email,
+            subject: `Account activation link`,
+            html: `
+            <p>Please use the following link to activate your acccount:</p>
+            <p>${process.env.CLIENT_URL}/auth/account/activate/${token}</p>
+            <hr />
+            <p>This email may contain sensetive information</p>
+            <p>https://seoblog.com</p>
+        `
+        };
+
+        sgMail.send(emailData).then(sent => {
+            return res.json({
+                message: `Email has been sent to ${email}. Follow the instructions to activate your account.`
+            });
+        });
     });
-})
+};
 
-}
 
-})
+// exports.signup=(req,res)=>{
+//     let username,profile
     
-    };
+//     const {name,email,password}=req.body;
+//     users.findOne({email}).exec((err,user)=>{
+// if(user){
+//     return res.status(400).json({
+//         error:"user already exists"
+//     })
+// }
+// else{
+// username=shortId.generate()
+// profile=`${process.env.CLIENT_URL}/profile/${username}`
+// let newuser=new users({name,email,password,username,profile})
+// newuser.save()
+// .then(user=>{
+//     res.json({
+//             email: user.email,
+//             username: user.username,
+//             password: user.password,
+//             name:user.name, 
+//             profile:user.profile
+//     });
+// })
 
+// }
 
+// })
+    
+//     };
+
+exports.signup = (req, res) => {
+    const token = req.body.token;
+    if (token) {
+        jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, function(err, decoded) {
+            if (err) {
+                return res.status(401).json({
+                    error: 'Expired link. Signup again'
+                });
+            }
+
+            const { name, email, password } = jwt.decode(token);
+
+            let username = shortId.generate();
+            let profile = `${process.env.CLIENT_URL}/profile/${username}`;
+
+            const user = new users({ name, email, password, profile, username });
+            user.save((err, user) => {
+                if (err) {
+                    return res.status(401).json({
+                        error: err
+                    });
+                }
+                return res.json({
+                    message: 'Singup success! Please signin'
+                });
+            });
+        });
+    } else {
+        return res.json({
+            message: 'Something went wrong. Try again'
+        });
+    }
+};
     exports.signin=(req,res)=>{
        
         const {email,password}=req.body;
@@ -173,7 +239,7 @@ exports.forgotPassword = (req, res) => {
 
 exports.resetPassword = (req, res) => {
     const { resetPasswordLink, newPassword } = req.body;
-
+console.log("link"+resetPasswordLink)
     if (resetPasswordLink) {
         jwt.verify(resetPasswordLink, process.env.JWT_RESET_PASSWORD, function(err, decoded) {
             if (err) {
