@@ -5,5 +5,4 @@ var PRODUCTION=false
 export const API=PRODUCTION ? 'http://seoblog.com':'http://localhost:5000'
 export const APP_NAME='SeoBlog';
 export const DOMAIN=PRODUCTION?'http://localhost:3000':'https://seoblog.com';
-export const FB_APP_ID ='3074888912563765';
-export const GOOGLE_CLIENT_ID='199745215389-bchqn0h6cas15l44idd8iolr7phtlm0e.apps.googleusercontent.com'
+
