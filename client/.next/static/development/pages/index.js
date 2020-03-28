@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["static/development/pages/signup.js"],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["static/development/pages/index.js"],{
 
 /***/ "../node_modules/mongoose/dist/browser.umd.js":
 /*!****************************************************!*\
@@ -1546,7 +1546,7 @@ f.ValidationError=u,t.exports=f}])});
 /*!*************************!*\
   !*** ./actions/auth.js ***!
   \*************************/
-/*! exports provided: preSignup, signup, updateUser, handleResponse, signin, setCookie, removeCookie, getCookie, setLocalStorage, removeLocalStorage, authentication, signout, isAuth, forgotPassword, resetPassword */
+/*! exports provided: preSignup, signup, updateUser, handleResponse, signin, setCookie, removeCookie, getCookie, setLocalStorage, removeLocalStorage, authentication, signout, isAuth, forgotPassword, resetPassword, authenticate, loginWithGoogle */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1566,6 +1566,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isAuth", function() { return isAuth; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forgotPassword", function() { return forgotPassword; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resetPassword", function() { return resetPassword; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "authenticate", function() { return authenticate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loginWithGoogle", function() { return loginWithGoogle; });
 /* harmony import */ var _babel_runtime_corejs2_core_js_json_stringify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/json/stringify */ "./node_modules/@babel/runtime-corejs2/core-js/json/stringify.js");
 /* harmony import */ var _babel_runtime_corejs2_core_js_json_stringify__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_json_stringify__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! isomorphic-fetch */ "./node_modules/isomorphic-fetch/fetch-npm-browserify.js");
@@ -1726,6 +1728,25 @@ var resetPassword = function resetPassword(resetInfo) {
       'Content-Type': 'application/json'
     },
     body: _babel_runtime_corejs2_core_js_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(resetInfo)
+  }).then(function (response) {
+    return response.json();
+  })["catch"](function (err) {
+    return console.log(err);
+  });
+};
+var authenticate = function authenticate(data, next) {
+  setCookie('token', data.token);
+  setLocalStorage('user', data.user);
+  next();
+};
+var loginWithGoogle = function loginWithGoogle(user) {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["API"], "/api/auth/google-login"), {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: _babel_runtime_corejs2_core_js_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(user)
   }).then(function (response) {
     return response.json();
   })["catch"](function (err) {
@@ -1908,230 +1929,6 @@ var listSearch = function listSearch(params) {
     return console.log(err);
   });
 };
-
-/***/ }),
-
-/***/ "./components/auth/signupcomponent.js":
-/*!********************************************!*\
-  !*** ./components/auth/signupcomponent.js ***!
-  \********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_define_property__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/object/define-property */ "./node_modules/@babel/runtime-corejs2/core-js/object/define-property.js");
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_define_property__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_object_define_property__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_define_properties__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/object/define-properties */ "./node_modules/@babel/runtime-corejs2/core-js/object/define-properties.js");
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_define_properties__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_object_define_properties__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/object/get-own-property-descriptors */ "./node_modules/@babel/runtime-corejs2/core-js/object/get-own-property-descriptors.js");
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/object/get-own-property-descriptor */ "./node_modules/@babel/runtime-corejs2/core-js/object/get-own-property-descriptor.js");
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/object/get-own-property-symbols */ "./node_modules/@babel/runtime-corejs2/core-js/object/get-own-property-symbols.js");
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_keys__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/object/keys */ "./node_modules/@babel/runtime-corejs2/core-js/object/keys.js");
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_keys__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_object_keys__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/defineProperty */ "./node_modules/@babel/runtime-corejs2/helpers/esm/defineProperty.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _actions_auth__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../actions/auth */ "./actions/auth.js");
-/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! next/router */ "./node_modules/next/dist/client/router.js");
-/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_9__);
-
-
-
-
-
-
-
-var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/components/auth/signupcomponent.js";
-
-var __jsx = react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement;
-
-function ownKeys(object, enumerableOnly) { var keys = _babel_runtime_corejs2_core_js_object_keys__WEBPACK_IMPORTED_MODULE_5___default()(object); if (_babel_runtime_corejs2_core_js_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_4___default.a) { var symbols = _babel_runtime_corejs2_core_js_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_4___default()(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return _babel_runtime_corejs2_core_js_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_3___default()(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(target, key, source[key]); }); } else if (_babel_runtime_corejs2_core_js_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_2___default.a) { _babel_runtime_corejs2_core_js_object_define_properties__WEBPACK_IMPORTED_MODULE_1___default()(target, _babel_runtime_corejs2_core_js_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_2___default()(source)); } else { ownKeys(Object(source)).forEach(function (key) { _babel_runtime_corejs2_core_js_object_define_property__WEBPACK_IMPORTED_MODULE_0___default()(target, key, _babel_runtime_corejs2_core_js_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_3___default()(source, key)); }); } } return target; }
-
-
-
-
-
-var SignupComponent = function SignupComponent() {
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_7__["useState"])({
-    name: '',
-    email: '',
-    password: '',
-    loading: false,
-    message: '',
-    error: '',
-    showForm: true
-  }),
-      values = _useState[0],
-      setValues = _useState[1];
-
-  Object(react__WEBPACK_IMPORTED_MODULE_7__["useEffect"])(function () {
-    Object(_actions_auth__WEBPACK_IMPORTED_MODULE_8__["isAuth"])() && next_router__WEBPACK_IMPORTED_MODULE_9___default.a.push('/'), [];
-  });
-  var email = values.email,
-      password = values.password,
-      name = values.name,
-      loading = values.loading,
-      message = values.message,
-      error = values.error,
-      showForm = values.showForm;
-
-  var handleSubmit = function handleSubmit(e) {
-    e.preventDefault();
-    setValues(_objectSpread({}, values, {
-      loading: true,
-      error: false
-    }));
-    var user = {
-      email: email,
-      name: name,
-      password: password
-    };
-    Object(_actions_auth__WEBPACK_IMPORTED_MODULE_8__["preSignup"])(user).then(function (data) {
-      if (data.error) {
-        setValues(_objectSpread({}, values, {
-          error: data.error,
-          loading: false
-        }));
-      } else {
-        setValues(_objectSpread({}, values, {
-          name: '',
-          email: '',
-          password: '',
-          error: '',
-          loading: false,
-          message: data.message,
-          showForm: false
-        }));
-      }
-    });
-  };
-
-  var handleChange = function handleChange(name) {
-    return function (e) {
-      setValues(_objectSpread({}, values, Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])({
-        error: false
-      }, name, e.target.value)));
-      console.log(e.target.value);
-    };
-  };
-
-  var showLoading = function showLoading() {
-    return loading ? __jsx("div", {
-      className: "alert alert-info",
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 49
-      },
-      __self: this
-    }, "Loading...") : '';
-  };
-
-  var showError = function showError() {
-    return error ? __jsx("div", {
-      className: "alert alert-danger",
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 50
-      },
-      __self: this
-    }, error) : '';
-  };
-
-  var showMessage = function showMessage() {
-    return message ? __jsx("div", {
-      className: "alert alert-info",
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 51
-      },
-      __self: this
-    }, message) : '';
-  };
-
-  return __jsx(react__WEBPACK_IMPORTED_MODULE_7___default.a.Fragment, {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 53
-    },
-    __self: this
-  }, showLoading(), showMessage(), showError(), __jsx("form", {
-    onSubmit: handleSubmit,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 57
-    },
-    __self: this
-  }, __jsx("div", {
-    className: "form-group",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 58
-    },
-    __self: this
-  }, __jsx("input", {
-    value: name,
-    onChange: handleChange('name'),
-    type: "text",
-    className: "form-control",
-    placeholder: "type your name",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 59
-    },
-    __self: this
-  })), __jsx("div", {
-    className: "form-group",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 61
-    },
-    __self: this
-  }, __jsx("input", {
-    value: email,
-    onChange: handleChange('email'),
-    type: "email",
-    className: "form-control",
-    placeholder: "type your email",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 62
-    },
-    __self: this
-  })), __jsx("div", {
-    className: "form-group",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 64
-    },
-    __self: this
-  }, __jsx("input", {
-    value: password,
-    onChange: handleChange('password'),
-    type: "password",
-    className: "form-control",
-    placeholder: "type your password",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 65
-    },
-    __self: this
-  })), __jsx("button", {
-    className: "btn-btn-primary",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 67
-    },
-    __self: this
-  }, "Signup")));
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (SignupComponent);
 
 /***/ }),
 
@@ -2655,7 +2452,7 @@ var Layout = function Layout(_ref) {
 /*!*******************!*\
   !*** ./config.js ***!
   \*******************/
-/*! exports provided: API, APP_NAME, DOMAIN, FB_APP_ID */
+/*! exports provided: API, APP_NAME, DOMAIN, FB_APP_ID, GOOGLE_CLIENT_ID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2664,6 +2461,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "APP_NAME", function() { return APP_NAME; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DOMAIN", function() { return DOMAIN; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FB_APP_ID", function() { return FB_APP_ID; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GOOGLE_CLIENT_ID", function() { return GOOGLE_CLIENT_ID; });
 /* harmony import */ var next_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! next/config */ "./node_modules/next/dist/next-server/lib/runtime-config.js");
 /* harmony import */ var next_config__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(next_config__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -2677,6 +2475,7 @@ var API = PRODUCTION ? 'http://seoblog.com' : 'http://localhost:5000';
 var APP_NAME = 'SeoBlog';
 var DOMAIN = PRODUCTION ? 'http://localhost:3000' : 'https://seoblog.com';
 var FB_APP_ID = '3074888912563765';
+var GOOGLE_CLIENT_ID = '199745215389-bchqn0h6cas15l44idd8iolr7phtlm0e.apps.googleusercontent.com';
 
 /***/ }),
 
@@ -11755,21 +11554,21 @@ var assign=Object.assign.bind(Object);function g(){return assign;}Object.defineP
 
 /***/ }),
 
-/***/ "./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2Fsignup&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fsignup.js!./":
-/*!***************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2Fsignup&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fsignup.js ***!
-  \***************************************************************************************************************************************************************************************/
+/***/ "./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2F&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Findex.js!./":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2F&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Findex.js ***!
+  \********************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-    (window.__NEXT_P=window.__NEXT_P||[]).push(["/signup", function() {
-      var mod = __webpack_require__(/*! ./pages/signup.js */ "./pages/signup.js")
+    (window.__NEXT_P=window.__NEXT_P||[]).push(["/", function() {
+      var mod = __webpack_require__(/*! ./pages/index.js */ "./pages/index.js")
       if(true) {
-        module.hot.accept(/*! ./pages/signup.js */ "./pages/signup.js", function() {
-          if(!next.router.components["/signup"]) return
-          var updatedPage = __webpack_require__(/*! ./pages/signup.js */ "./pages/signup.js")
-          next.router.update("/signup", updatedPage)
+        module.hot.accept(/*! ./pages/index.js */ "./pages/index.js", function() {
+          if(!next.router.components["/"]) return
+          var updatedPage = __webpack_require__(/*! ./pages/index.js */ "./pages/index.js")
+          next.router.update("/", updatedPage)
         })
       }
       return mod
@@ -39963,7 +39762,7 @@ util.inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inh
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(/*! util */ 3);
+var debugUtil = __webpack_require__(/*! util */ 2);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -41852,7 +41651,7 @@ Writable.prototype._destroy = function (err, cb) {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer;
-var util = __webpack_require__(/*! util */ 4);
+var util = __webpack_require__(/*! util */ 3);
 
 function copyBuffer(src, target, offset) {
   src.copy(target, offset);
@@ -44514,10 +44313,10 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./pages/signup.js":
-/*!*************************!*\
-  !*** ./pages/signup.js ***!
-  \*************************/
+/***/ "./pages/index.js":
+/*!************************!*\
+  !*** ./pages/index.js ***!
+  \************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -44528,68 +44327,316 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/layout */ "./components/layout.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _components_auth_signupcomponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/auth/signupcomponent */ "./components/auth/signupcomponent.js");
-var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/pages/signup.js";
+var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/pages/index.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
-
-var Signup = function Signup() {
+var Index = function Index() {
   return __jsx(_components_layout__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 6
+    },
+    __self: this
+  }, __jsx("article", {
+    className: "overflow-hidden",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 7
     },
     __self: this
   }, __jsx("div", {
-    className: "row",
+    className: "container",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 8
     },
     __self: this
   }, __jsx("div", {
-    className: "col-md-8 offset-md-2",
+    className: "row",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 9
     },
     __self: this
-  }, __jsx("h2", {
-    style: {
-      textAlign: "center",
-      padding: "2%",
-      fontWeight: "bold"
-    },
+  }, __jsx("div", {
+    className: "col-md-12 text-center",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 10
     },
     __self: this
-  }, "Signup page"), __jsx(_components_auth_signupcomponent__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, __jsx("h1", {
+    className: "display-4 font-weight-bold",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 11
     },
     __self: this
-  }))));
+  }, "PROGRAMMING & WEB DEVELOPMENT BLOGS/TUTORIALS")))), __jsx("div", {
+    className: "container",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 18
+    },
+    __self: this
+  }, __jsx("div", {
+    className: "row",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 19
+    },
+    __self: this
+  }, __jsx("div", {
+    className: "col-md-12 text-center pt-4 pb-5",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 20
+    },
+    __self: this
+  }, __jsx("p", {
+    className: "lead",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 21
+    },
+    __self: this
+  }, "Best programming and web development blogs and tutorials on React Node NextJs and JavaScript")))), __jsx("div", {
+    className: "container-fluid",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 28
+    },
+    __self: this
+  }, __jsx("div", {
+    className: "row",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 29
+    },
+    __self: this
+  }, __jsx("div", {
+    className: "col-md-4",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 30
+    },
+    __self: this
+  }, __jsx("div", {
+    className: "flip flip-horizontal",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 31
+    },
+    __self: this
+  }, __jsx("div", {
+    className: "front",
+    style: {
+      backgroundImage: 'url(' + 'https://images.pexels.com/photos/540518/pexels-photo-540518.jpeg' + ')'
+    },
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 32
+    },
+    __self: this
+  }, __jsx("h2", {
+    className: "text-shadow text-center h1",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 41
+    },
+    __self: this
+  }, "React")), __jsx("div", {
+    className: "back text-center",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 43
+    },
+    __self: this
+  }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    href: "/blogs/node",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 44
+    },
+    __self: this
+  }, __jsx("a", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 45
+    },
+    __self: this
+  }, __jsx("h3", {
+    className: "h1",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 46
+    },
+    __self: this
+  }, "React Js"))), __jsx("p", {
+    className: "lead",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 49
+    },
+    __self: this
+  }, "The world's most popular frontend web development library")))), __jsx("div", {
+    className: "col-md-4",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 54
+    },
+    __self: this
+  }, __jsx("div", {
+    className: "flip flip-horizontal",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 55
+    },
+    __self: this
+  }, __jsx("div", {
+    className: "front",
+    style: {
+      backgroundImage: 'url(' + 'https://images.pexels.com/photos/540518/pexels-photo-540518.jpeg' + ')'
+    },
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 56
+    },
+    __self: this
+  }, __jsx("h2", {
+    className: "text-shadow text-center h1",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 65
+    },
+    __self: this
+  }, "Node")), __jsx("div", {
+    className: "back text-center",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 67
+    },
+    __self: this
+  }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    href: "/blogs/reactjs",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 68
+    },
+    __self: this
+  }, __jsx("a", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 69
+    },
+    __self: this
+  }, __jsx("h3", {
+    className: "h1",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 70
+    },
+    __self: this
+  }, "Node Js"))), __jsx("p", {
+    className: "lead",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 73
+    },
+    __self: this
+  }, "The worlds most popular backend development tool for JavaScript Ninjas")))), __jsx("div", {
+    className: "col-md-4",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 80
+    },
+    __self: this
+  }, __jsx("div", {
+    className: "flip flip-horizontal",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 81
+    },
+    __self: this
+  }, __jsx("div", {
+    className: "front",
+    style: {
+      backgroundImage: 'url(' + 'https://images.pexels.com/photos/540518/pexels-photo-540518.jpeg' + ')'
+    },
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 82
+    },
+    __self: this
+  }, __jsx("h2", {
+    className: "text-shadow text-center h1",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 91
+    },
+    __self: this
+  }, "Next")), __jsx("div", {
+    className: "back text-center",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 93
+    },
+    __self: this
+  }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    href: "/categories/nextjs",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 94
+    },
+    __self: this
+  }, __jsx("a", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 95
+    },
+    __self: this
+  }, __jsx("h3", {
+    className: "h1",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 96
+    },
+    __self: this
+  }, "Next Js"))), __jsx("p", {
+    className: "lead",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 99
+    },
+    __self: this
+  }, "A Production ready web framework for building SEO React apps"))))))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Signup);
+/* harmony default export */ __webpack_exports__["default"] = (Index); // import Layout from '../components/layout.js';
+// const Index=()=>{
+//     return (
+//         <Layout>
+//             <h2>Januuuu</h2>
+//             <a href="/signup">Signup</a>
+//             <a href="/signin">Signin</a>
+//         </Layout>
+//     )
+// }
+// export default Index;
 
 /***/ }),
 
 /***/ 2:
-/*!*******************************************************************************************************************************************!*\
-  !*** multi next-client-pages-loader?page=%2Fsignup&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fsignup.js ***!
-  \*******************************************************************************************************************************************/
+/*!**********************!*\
+  !*** util (ignored) ***!
+  \**********************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-module.exports = __webpack_require__(/*! next-client-pages-loader?page=%2Fsignup&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fsignup.js! */"./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2Fsignup&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Fsignup.js!./");
-
+/* (ignored) */
 
 /***/ }),
 
@@ -44605,13 +44652,14 @@ module.exports = __webpack_require__(/*! next-client-pages-loader?page=%2Fsignup
 /***/ }),
 
 /***/ 4:
-/*!**********************!*\
-  !*** util (ignored) ***!
-  \**********************/
+/*!************************************************************************************************************************************!*\
+  !*** multi next-client-pages-loader?page=%2F&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Findex.js ***!
+  \************************************************************************************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-/* (ignored) */
+module.exports = __webpack_require__(/*! next-client-pages-loader?page=%2F&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Findex.js! */"./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2F&absolutePagePath=%2Fhome%2Fjahnvi%2FMy%20stuff%2FSeoBlog%2Fclient%2Fpages%2Findex.js!./");
+
 
 /***/ }),
 
@@ -44626,5 +44674,5 @@ module.exports = dll_5f137288facb1107b491;
 
 /***/ })
 
-},[[2,"static/runtime/webpack.js"]]]);
-//# sourceMappingURL=signup.js.map
+},[[4,"static/runtime/webpack.js"]]]);
+//# sourceMappingURL=index.js.map

@@ -89,7 +89,7 @@ const SingleBlog = ({ blog ,query}) => {
                             <section>
                                 <p className="lead mt-3 mark">
                                 <Link href={`/profile/${blog.postedBy.username}`}>
-                    <a className="float-right">{blog.postedBy.username}</a>
+                    <a>{blog.postedBy.username}</a>
                 </Link> | Published {moment(blog.updatedAt).fromNow()}
                                 </p>
 

@@ -1,6 +1,6 @@
 const express=require("express")
 const router=express.Router()
-const { signup, signin,signout,requireSignin, forgotPassword, resetPassword,preSignup }=require('./controllers/auth-function') 
+const { signup, signin,signout,requireSignin,googleLogin, forgotPassword, resetPassword,preSignup }=require('./controllers/auth-function') 
 const {runValidation}=require('./validators')
 const {userSignupValidator,userSigninValidator,    forgotPasswordValidator,
     resetPasswordValidator}=require('./validators/auth-validator')
@@ -10,8 +10,6 @@ router.get('/signout', signout);
 router.put('/forgot-password', forgotPasswordValidator, runValidation, forgotPassword);
 router.put('/reset-password', resetPasswordValidator, runValidation, resetPassword);
 router.post('/pre-signup', preSignup);
-router.get("/test",requireSignin,(req,res)=>{
-    res.json({message:req.user})
-})
+router.post('/google-login', googleLogin);
 
 module.exports=router

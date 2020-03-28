@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -97,7 +97,7 @@ module.exports =
 /*!*************************!*\
   !*** ./actions/auth.js ***!
   \*************************/
-/*! exports provided: preSignup, signup, updateUser, handleResponse, signin, setCookie, removeCookie, getCookie, setLocalStorage, removeLocalStorage, authentication, signout, isAuth, forgotPassword, resetPassword */
+/*! exports provided: preSignup, signup, updateUser, handleResponse, signin, setCookie, removeCookie, getCookie, setLocalStorage, removeLocalStorage, authentication, signout, isAuth, forgotPassword, resetPassword, authenticate, loginWithGoogle */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -117,6 +117,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isAuth", function() { return isAuth; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forgotPassword", function() { return forgotPassword; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resetPassword", function() { return resetPassword; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "authenticate", function() { return authenticate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loginWithGoogle", function() { return loginWithGoogle; });
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! isomorphic-fetch */ "isomorphic-fetch");
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./config.js");
@@ -229,6 +231,23 @@ const resetPassword = resetInfo => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(resetInfo)
+  }).then(response => {
+    return response.json();
+  }).catch(err => console.log(err));
+};
+const authenticate = (data, next) => {
+  setCookie('token', data.token);
+  setLocalStorage('user', data.user);
+  next();
+};
+const loginWithGoogle = user => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/api/auth/google-login`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(user)
   }).then(response => {
     return response.json();
   }).catch(err => console.log(err));
@@ -390,207 +409,6 @@ const listSearch = params => {
     return response.json();
   }).catch(err => console.log(err));
 };
-
-/***/ }),
-
-/***/ "./components/auth/signupcomponent.js":
-/*!********************************************!*\
-  !*** ./components/auth/signupcomponent.js ***!
-  \********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/auth */ "./actions/auth.js");
-/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/router */ "next/router");
-/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_2__);
-var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/components/auth/signupcomponent.js";
-
-var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-const SignupComponent = () => {
-  const {
-    0: values,
-    1: setValues
-  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
-    name: '',
-    email: '',
-    password: '',
-    loading: false,
-    message: '',
-    error: '',
-    showForm: true
-  });
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
-    Object(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["isAuth"])() && next_router__WEBPACK_IMPORTED_MODULE_2___default.a.push('/'), [];
-  });
-  const {
-    email,
-    password,
-    name,
-    loading,
-    message,
-    error,
-    showForm
-  } = values;
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    setValues(_objectSpread({}, values, {
-      loading: true,
-      error: false
-    }));
-    const user = {
-      email,
-      name,
-      password
-    };
-    Object(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["preSignup"])(user).then(data => {
-      if (data.error) {
-        setValues(_objectSpread({}, values, {
-          error: data.error,
-          loading: false
-        }));
-      } else {
-        setValues(_objectSpread({}, values, {
-          name: '',
-          email: '',
-          password: '',
-          error: '',
-          loading: false,
-          message: data.message,
-          showForm: false
-        }));
-      }
-    });
-  };
-
-  const handleChange = name => e => {
-    setValues(_objectSpread({}, values, {
-      error: false,
-      [name]: e.target.value
-    }));
-    console.log(e.target.value);
-  };
-
-  const showLoading = () => loading ? __jsx("div", {
-    className: "alert alert-info",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 49
-    },
-    __self: undefined
-  }, "Loading...") : '';
-
-  const showError = () => error ? __jsx("div", {
-    className: "alert alert-danger",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 50
-    },
-    __self: undefined
-  }, error) : '';
-
-  const showMessage = () => message ? __jsx("div", {
-    className: "alert alert-info",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 51
-    },
-    __self: undefined
-  }, message) : '';
-
-  return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 53
-    },
-    __self: undefined
-  }, showLoading(), showMessage(), showError(), __jsx("form", {
-    onSubmit: handleSubmit,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 57
-    },
-    __self: undefined
-  }, __jsx("div", {
-    className: "form-group",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 58
-    },
-    __self: undefined
-  }, __jsx("input", {
-    value: name,
-    onChange: handleChange('name'),
-    type: "text",
-    className: "form-control",
-    placeholder: "type your name",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 59
-    },
-    __self: undefined
-  })), __jsx("div", {
-    className: "form-group",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 61
-    },
-    __self: undefined
-  }, __jsx("input", {
-    value: email,
-    onChange: handleChange('email'),
-    type: "email",
-    className: "form-control",
-    placeholder: "type your email",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 62
-    },
-    __self: undefined
-  })), __jsx("div", {
-    className: "form-group",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 64
-    },
-    __self: undefined
-  }, __jsx("input", {
-    value: password,
-    onChange: handleChange('password'),
-    type: "password",
-    className: "form-control",
-    placeholder: "type your password",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 65
-    },
-    __self: undefined
-  })), __jsx("button", {
-    className: "btn-btn-primary",
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 67
-    },
-    __self: undefined
-  }, "Signup")));
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (SignupComponent);
 
 /***/ }),
 
@@ -1092,7 +910,7 @@ const Layout = ({
 /*!*******************!*\
   !*** ./config.js ***!
   \*******************/
-/*! exports provided: API, APP_NAME, DOMAIN, FB_APP_ID */
+/*! exports provided: API, APP_NAME, DOMAIN, FB_APP_ID, GOOGLE_CLIENT_ID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1101,6 +919,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "APP_NAME", function() { return APP_NAME; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DOMAIN", function() { return DOMAIN; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FB_APP_ID", function() { return FB_APP_ID; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GOOGLE_CLIENT_ID", function() { return GOOGLE_CLIENT_ID; });
 /* harmony import */ var next_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! next/config */ "next/config");
 /* harmony import */ var next_config__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(next_config__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -1113,6 +932,7 @@ const API = PRODUCTION ? 'http://seoblog.com' : 'http://localhost:5000';
 const APP_NAME = 'SeoBlog';
 const DOMAIN = PRODUCTION ? 'http://localhost:3000' : 'https://seoblog.com';
 const FB_APP_ID = '3074888912563765';
+const GOOGLE_CLIENT_ID = '199745215389-bchqn0h6cas15l44idd8iolr7phtlm0e.apps.googleusercontent.com';
 
 /***/ }),
 
@@ -2787,10 +2607,10 @@ module.exports = __webpack_require__(/*! ./dist/client/link */ "./node_modules/n
 
 /***/ }),
 
-/***/ "./pages/signup.js":
-/*!*************************!*\
-  !*** ./pages/signup.js ***!
-  \*************************/
+/***/ "./pages/index.js":
+/*!************************!*\
+  !*** ./pages/index.js ***!
+  \************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2801,67 +2621,316 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/layout */ "./components/layout.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _components_auth_signupcomponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/auth/signupcomponent */ "./components/auth/signupcomponent.js");
-var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/pages/signup.js";
+var _jsxFileName = "/home/jahnvi/My stuff/SeoBlog/client/pages/index.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
-
-const Signup = () => {
+const Index = () => {
   return __jsx(_components_layout__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 6
+    },
+    __self: undefined
+  }, __jsx("article", {
+    className: "overflow-hidden",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 7
     },
     __self: undefined
   }, __jsx("div", {
-    className: "row",
+    className: "container",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 8
     },
     __self: undefined
   }, __jsx("div", {
-    className: "col-md-8 offset-md-2",
+    className: "row",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 9
     },
     __self: undefined
-  }, __jsx("h2", {
-    style: {
-      textAlign: "center",
-      padding: "2%",
-      fontWeight: "bold"
-    },
+  }, __jsx("div", {
+    className: "col-md-12 text-center",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 10
     },
     __self: undefined
-  }, "Signup page"), __jsx(_components_auth_signupcomponent__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, __jsx("h1", {
+    className: "display-4 font-weight-bold",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 11
     },
     __self: undefined
-  }))));
+  }, "PROGRAMMING & WEB DEVELOPMENT BLOGS/TUTORIALS")))), __jsx("div", {
+    className: "container",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 18
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "row",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 19
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "col-md-12 text-center pt-4 pb-5",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 20
+    },
+    __self: undefined
+  }, __jsx("p", {
+    className: "lead",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 21
+    },
+    __self: undefined
+  }, "Best programming and web development blogs and tutorials on React Node NextJs and JavaScript")))), __jsx("div", {
+    className: "container-fluid",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 28
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "row",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 29
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "col-md-4",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 30
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "flip flip-horizontal",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 31
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "front",
+    style: {
+      backgroundImage: 'url(' + 'https://images.pexels.com/photos/540518/pexels-photo-540518.jpeg' + ')'
+    },
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 32
+    },
+    __self: undefined
+  }, __jsx("h2", {
+    className: "text-shadow text-center h1",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 41
+    },
+    __self: undefined
+  }, "React")), __jsx("div", {
+    className: "back text-center",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 43
+    },
+    __self: undefined
+  }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    href: "/blogs/node",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 44
+    },
+    __self: undefined
+  }, __jsx("a", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 45
+    },
+    __self: undefined
+  }, __jsx("h3", {
+    className: "h1",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 46
+    },
+    __self: undefined
+  }, "React Js"))), __jsx("p", {
+    className: "lead",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 49
+    },
+    __self: undefined
+  }, "The world's most popular frontend web development library")))), __jsx("div", {
+    className: "col-md-4",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 54
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "flip flip-horizontal",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 55
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "front",
+    style: {
+      backgroundImage: 'url(' + 'https://images.pexels.com/photos/540518/pexels-photo-540518.jpeg' + ')'
+    },
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 56
+    },
+    __self: undefined
+  }, __jsx("h2", {
+    className: "text-shadow text-center h1",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 65
+    },
+    __self: undefined
+  }, "Node")), __jsx("div", {
+    className: "back text-center",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 67
+    },
+    __self: undefined
+  }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    href: "/blogs/reactjs",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 68
+    },
+    __self: undefined
+  }, __jsx("a", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 69
+    },
+    __self: undefined
+  }, __jsx("h3", {
+    className: "h1",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 70
+    },
+    __self: undefined
+  }, "Node Js"))), __jsx("p", {
+    className: "lead",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 73
+    },
+    __self: undefined
+  }, "The worlds most popular backend development tool for JavaScript Ninjas")))), __jsx("div", {
+    className: "col-md-4",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 80
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "flip flip-horizontal",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 81
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "front",
+    style: {
+      backgroundImage: 'url(' + 'https://images.pexels.com/photos/540518/pexels-photo-540518.jpeg' + ')'
+    },
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 82
+    },
+    __self: undefined
+  }, __jsx("h2", {
+    className: "text-shadow text-center h1",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 91
+    },
+    __self: undefined
+  }, "Next")), __jsx("div", {
+    className: "back text-center",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 93
+    },
+    __self: undefined
+  }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    href: "/categories/nextjs",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 94
+    },
+    __self: undefined
+  }, __jsx("a", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 95
+    },
+    __self: undefined
+  }, __jsx("h3", {
+    className: "h1",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 96
+    },
+    __self: undefined
+  }, "Next Js"))), __jsx("p", {
+    className: "lead",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 99
+    },
+    __self: undefined
+  }, "A Production ready web framework for building SEO React apps"))))))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Signup);
+/* harmony default export */ __webpack_exports__["default"] = (Index); // import Layout from '../components/layout.js';
+// const Index=()=>{
+//     return (
+//         <Layout>
+//             <h2>Januuuu</h2>
+//             <a href="/signup">Signup</a>
+//             <a href="/signin">Signin</a>
+//         </Layout>
+//     )
+// }
+// export default Index;
 
 /***/ }),
 
-/***/ 4:
-/*!*******************************!*\
-  !*** multi ./pages/signup.js ***!
-  \*******************************/
+/***/ 3:
+/*!******************************!*\
+  !*** multi ./pages/index.js ***!
+  \******************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/jahnvi/My stuff/SeoBlog/client/pages/signup.js */"./pages/signup.js");
+module.exports = __webpack_require__(/*! /home/jahnvi/My stuff/SeoBlog/client/pages/index.js */"./pages/index.js");
 
 
 /***/ }),
@@ -3065,4 +3134,4 @@ module.exports = require("url");
 /***/ })
 
 /******/ });
-//# sourceMappingURL=signup.js.map
+//# sourceMappingURL=index.js.map

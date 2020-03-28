@@ -2,6 +2,7 @@ import {useState,useEffect} from 'react'
 import {signin,authentication,isAuth} from '../../actions/auth'
 import Link from 'next/link';
 import Router from 'next/router';
+//import LoginGoogle from './LoginGoogle';
 const SigninComponent=()=>{
 const [values,setValues]=useState({
 name:'',
@@ -65,6 +66,7 @@ const showMessage=()=>(message?<div className="alert alert-info">{message}</div>
     <input  value={password} onChange={handleChange('password')} type="password" className="form-control" placeholder="type your password" />
 </div>
 <button className="btn-btn-primary">Signin</button>
+{/* <LoginGoogle /> */}
 <Link href="/auth/password/forget">
                 <a className="btn btn-outline-danger btn-sm">Forgot password</a>
             </Link>

@@ -1,6 +1,7 @@
 import {useState,useEffect} from 'react'
 import {signup,authentication,isAuth,preSignup} from '../../actions/auth'
 import Router from 'next/router';
+//import LoginGoogle from './LoginGoogle';
 const SignupComponent=()=>{
     const [values,setValues]=useState({
 name:'',
@@ -65,6 +66,8 @@ const showMessage=()=>(message?<div className="alert alert-info">{message}</div>
     <input  value={password} onChange={handleChange('password')} type="password" className="form-control" placeholder="type your password" />
 </div>
 <button className="btn-btn-primary">Signup</button>
+{/* <LoginGoogle /> */}
+
   </form>
   </React.Fragment>
 )
